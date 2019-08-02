@@ -28,7 +28,6 @@ pipeline{
 		 echo"no tag"
                     ;;
           esac 
-			'''
 			}
 			}
 			}
