@@ -37,7 +37,7 @@ sh '''
                //checkout scm;
 		    sh '''
 		    echo $TAG1
-		echo $GIT_COMMIT_HASH
+		echo $GIT_COMMIT
 		    '''
                 script{
 			
