@@ -3,10 +3,10 @@
 
 
 
-def getEnvVar(String paramName){
+/*def getEnvVar(String paramName){
     //get the env from properties file
     return sh (script:"grep '${paramName}' /opt/properties/phase1b_properties/dev_properties/Microservice/${TAG}-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
-}
+}*/
 
 pipeline{
     agent any
@@ -16,50 +16,35 @@ pipeline{
 			stage('Sence'){
 			steps{
 			sh '''
-			tags=$
+			env.GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
+			env.Tag=`git describe --tags $(git rev-list --tags --max-count=1)`
+			echo $Tag
+			echo $GIT_COMMIT_HASH
+
 			'''
 			
 			}
 			}
-         stage('Initialization'){
+        
+            stage('Initialization'){
             steps{
                //checkout scm;
 			   sh '''
-			   env.TAG=${tags}
+			echo $GIT_COMMIT_HASH
 			   '''
-                script{
-                env.BASE_DIR = pwd()
-                env.IMAGE_NAME = getEnvVar('IMAGE_NAME')
-                env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID')
-                env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE')
-                env.JENKINS_GCLOUD_K8S_CLUSTER_REGION = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_REGION')
-                env.DEPLOY_GCLOUD_PROJECT_ID_DEV= getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_DEV')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV')
-                env.DEPLOY_GCLOUD_PROJECT_ID_QA = getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_QA')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_QA')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_QA')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_QA')
-                env.DEPLOY_GCLOUD_PROJECT_ID_PREPROD = getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_PREPROD')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_PREPROD')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_PREPROD')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_PREPROD')
-                env.DEPLOYMENT_NAME=getEnvVar('DEPLOYMENT_NAME')
-                env.PATH_TO_PARENT_POM=getEnvVar('PATH_TO_PARENT_POM')
-                }
+
             }
         }
-    
+
+
         stage('Git Checkout') { // for display purposes 
             steps{
 		cleanWs()
-             checkout([$class: 'GitSCM', branches: [[name: '*/dev']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-service-acc', url: 'https://github.com/mattel-dig/ConsumerMaster--GSL-.git']]])
+             checkout([$class: 'GitSCM', branches: [[name: 'origin/tags/$TAG']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'd5645694-e9d9-4da8-8ef2-dcf70c5e4461', refspec: '+refs/tags/*:refs/remotes/origin/tags/*', url: 'https://github.com/sindhiya1930/codetest.git']]])
             }
        }
+        /*    
     
-    /* 
-          
         stage('PreBuild'){
             steps{
                 //Builds the container from Dockerfile
@@ -131,7 +116,7 @@ pipeline{
 		        }
             }
         }
-        
+
          stage('Docker Containerisation'){
             steps{
                 //Builds the container from Dockerfile
@@ -296,7 +281,7 @@ stage('DEV-SanityTesting&checkforRollback'){
                     '''
                 }
             }
-        } 
-*/
+        } */
+
 }
 }
