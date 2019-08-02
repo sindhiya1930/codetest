@@ -6,18 +6,20 @@ def getEnvVar(String paramName){
 def TAG1
 pipeline{
     agent any
-
+	environment{
+		GIT_TAG=script:"grep '${paramName}' /opt/sample/$TAG1-ms.properties|cut -d'=' -f2", returnStdout: true
+	}
     stages {
 	
 	stage('Sence'){
 			steps{
 sh '''
 			
-			GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
+			#GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
 
-			GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
+			#GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
 			
-		case  $GIT_TAG  in
+		case  env.GIT_TAG  in
                 "consumeraddress")       
  			TAG1=$GIT_TAG
                     ;;
