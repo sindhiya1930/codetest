@@ -16,10 +16,10 @@ pipeline{
 			stage('Sence'){
 			steps{
 			sh '''
-			env.GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
-			env.Tag=`git describe --tags $(git rev-list --tags --max-count=1)`
-			echo $Tag
+			GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
 			echo $GIT_COMMIT_HASH
+			Tag=`git describe --tags $(git rev-list --tags --max-count=1)`
+			echo $Tag
 
 			'''
 			
