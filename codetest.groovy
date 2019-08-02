@@ -1,6 +1,6 @@
-def getEnvVar(String paramName){
+def getEnvVar(String paramName,String TAG1){
     //get the env from properties file
-    return sh (script:"grep '${paramName}' /opt/sample/${TAG}-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
+    return sh (script:"grep '${paramName}' /opt/sample/${TAG1}-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
 
 pipeline{
@@ -13,13 +13,13 @@ pipeline{
 			sh '''
 			GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
 			echo $GIT_COMMIT_HASH
-			GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
+			GIT_TAG=`echo ${TAG}|cut -d'_' -f1`
 		case  $GIT_TAG  in
                 "consumeraddress")       
- 			TAG=$GIT_TAG
+ 			TAG1=$GIT_TAG
                     ;;
 		"consumerchild")       
- 		TAG=$GIT_TAG
+ 		TAG1=$GIT_TAG
                     ;;
                 *)      
 		 echo"no tag"
@@ -35,24 +35,24 @@ pipeline{
                //checkout scm;
                 script{
                 env.BASE_DIR = pwd()
-                env.IMAGE_NAME = getEnvVar('IMAGE_NAME')
-                env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID')
-                env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE')
-                env.JENKINS_GCLOUD_K8S_CLUSTER_REGION = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_REGION')
-                env.DEPLOY_GCLOUD_PROJECT_ID_DEV= getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_DEV')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV')
-                env.DEPLOY_GCLOUD_PROJECT_ID_QA = getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_QA')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_QA')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_QA')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_QA')
-                env.DEPLOY_GCLOUD_PROJECT_ID_PREPROD = getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_PREPROD')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_PREPROD')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_PREPROD')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_PREPROD')
-                env.DEPLOYMENT_NAME=getEnvVar('DEPLOYMENT_NAME')
-                env.PATH_TO_PARENT_POM=getEnvVar('PATH_TO_PARENT_POM')
+                env.IMAGE_NAME = getEnvVar('IMAGE_NAME',${TAG1})
+                env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID',${TAG1})
+                env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE',${TAG1})
+                env.JENKINS_GCLOUD_K8S_CLUSTER_REGION = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_REGION',${TAG1})
+                env.DEPLOY_GCLOUD_PROJECT_ID_DEV= getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_DEV',${TAG1})
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV',${TAG1})
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV',${TAG1})
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV',${TAG1})
+                env.DEPLOY_GCLOUD_PROJECT_ID_QA = getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_QA',${TAG1})
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_QA',${TAG1})
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_QA',${TAG1})
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_QA',${TAG1})
+                env.DEPLOY_GCLOUD_PROJECT_ID_PREPROD = getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_PREPROD',${TAG1})
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_PREPROD',${TAG1})
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_PREPROD',${TAG1})
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_PREPROD',${TAG1})
+                env.DEPLOYMENT_NAME=getEnvVar('DEPLOYMENT_NAME',${TAG1})
+                env.PATH_TO_PARENT_POM=getEnvVar('PATH_TO_PARENT_POM',${TAG1})
                 }
             }
         }
