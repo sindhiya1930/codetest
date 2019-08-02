@@ -1,12 +1,9 @@
 
 
-
-
-
-/*def getEnvVar(String paramName){
+def getEnvVar(String paramName){
     //get the env from properties file
-    return sh (script:"grep '${paramName}' /opt/properties/phase1b_properties/dev_properties/Microservice/${TAG}-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
-}*/
+    return sh (script:"grep '${paramName}' /opt/sample/${TAG}-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
+}
 
 pipeline{
     agent any
@@ -18,21 +15,47 @@ pipeline{
 			sh '''
 			GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
 			echo $GIT_COMMIT_HASH
-			Tag=`git describe --tags $(git rev-list --tags --max-count=1)`
-			echo $Tag
-
+			GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f2`
+		case  $GIT_TAG  in
+                "consumeraddress")       
+ 			TAG=$GIT_TAG
+                    ;;
+		"consumerchild")       
+ 		TAG=$GIT_TAG
+                    ;;
+                *)      
+		 echo"no tag"
+                    ;;
+          esac 
 			'''
 			
 			}
 			}
         
-            stage('Initialization'){
+        stage('Initialization'){
             steps{
                //checkout scm;
-			   sh '''
-			echo $GIT_COMMIT_HASH
-			   '''
-
+                script{
+                env.BASE_DIR = pwd()
+                env.IMAGE_NAME = getEnvVar('IMAGE_NAME')
+                env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID')
+                env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE')
+                env.JENKINS_GCLOUD_K8S_CLUSTER_REGION = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_REGION')
+                env.DEPLOY_GCLOUD_PROJECT_ID_DEV= getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_DEV')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV')
+                env.DEPLOY_GCLOUD_PROJECT_ID_QA = getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_QA')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_QA')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_QA')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_QA')
+                env.DEPLOY_GCLOUD_PROJECT_ID_PREPROD = getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_PREPROD')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_PREPROD')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_PREPROD')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_PREPROD')
+                env.DEPLOYMENT_NAME=getEnvVar('DEPLOYMENT_NAME')
+                env.PATH_TO_PARENT_POM=getEnvVar('PATH_TO_PARENT_POM')
+                }
             }
         }
 
@@ -43,6 +66,18 @@ pipeline{
              checkout([$class: 'GitSCM', branches: [[name: 'origin/tags/$TAG']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'd5645694-e9d9-4da8-8ef2-dcf70c5e4461', refspec: '+refs/tags/*:refs/remotes/origin/tags/*', url: 'https://github.com/sindhiya1930/codetest.git']]])
             }
        }
+	    
+	    
+    stages {
+	
+			stage('Sence'){
+			steps{
+			sh '''
+			echo ${DEPLOYMENT_NAME}
+			'''
+			
+			}
+			}
         /*    
     
         stage('PreBuild'){
