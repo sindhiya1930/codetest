@@ -2,13 +2,14 @@ def getEnvVar(String paramName,String TAG1){
     //get the env from properties file
     return sh (script:"grep '${paramName}' /opt/sample/${TAG1}-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
+
 def TAG1
 pipeline{
     agent any
 
     stages {
 	
-			stage('Sence'){
+	stage('Sence'){
 			steps{
 				script{
 			
