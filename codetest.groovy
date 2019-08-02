@@ -13,16 +13,16 @@ pipeline{
 			steps{
 				script{
 			
-			GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
-			echo $GIT_COMMIT_HASH
-			GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
+			env.GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
+
+			env.GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
 			
 		case  $GIT_TAG  in
                 "consumeraddress")       
- 			TAG1=$GIT_TAG
+ 			env.TAG1=$GIT_TAG
                     ;;
 		"consumerchild")       
- 		TAG1=$GIT_TAG
+ 		env.TAG1=$GIT_TAG
                     ;;
                 *)      
 		 echo"no tag"
@@ -38,6 +38,7 @@ pipeline{
                //checkout scm;
 		    sh '''
 		    echo '$TAG1'
+		echo $GIT_COMMIT_HASH
 		    '''
                 script{
 			
