@@ -11,24 +11,24 @@ pipeline{
 	
 	stage('Sence'){
 			steps{
-				script{
+sh '''
 			
-			env.GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
+			GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
 
-			env.GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
+			GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
 			
 		case  $GIT_TAG  in
                 "consumeraddress")       
- 			env.TAG1=$GIT_TAG
+ 			TAG1=$GIT_TAG
                     ;;
 		"consumerchild")       
- 		env.TAG1=$GIT_TAG
+ 		TAG1=$GIT_TAG
                     ;;
                 *)      
 		 echo"no tag"
                     ;;
           esac 
-			}
+ '''
 			}
 			}
         
