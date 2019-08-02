@@ -61,7 +61,7 @@ pipeline{
         stage('Git Checkout') { // for display purposes 
             steps{
 		cleanWs()
-             checkout([$class: 'GitSCM', branches: [[name: 'origin/tags/$TAG']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'd5645694-e9d9-4da8-8ef2-dcf70c5e4461', refspec: '+refs/tags/*:refs/remotes/origin/tags/*', url: 'https://github.com/sindhiya1930/codetest.git']]])
+             checkout([$class: 'GitSCM', branches: [[name: '**/tags/**']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'd5645694-e9d9-4da8-8ef2-dcf70c5e4461', refspec: '+refs/tags/*:refs/remotes/origin/tags/*', url: 'https://github.com/sindhiya1930/codetest.git']]])
             }
        }
 	    
