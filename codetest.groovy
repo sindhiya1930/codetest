@@ -1,6 +1,6 @@
 def getEnvVar(String paramName){
     //get the env from properties file
-    return sh (script:"grep '${paramName}' /opt/sample/${TAG1}-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
+    return sh (script:"grep '${paramName}' /opt/sample/$TAG1-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
 
 def TAG1
