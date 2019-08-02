@@ -34,7 +34,11 @@ pipeline{
         stage('Initialization'){
             steps{
                //checkout scm;
+		    sh '''
+		    echo ${TAG1}
+		    '''
                 script{
+			
                 env.BASE_DIR = pwd()
                 env.IMAGE_NAME = getEnvVar('IMAGE_NAME',${TAG1})
                 env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID',${TAG1})
