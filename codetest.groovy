@@ -5,19 +5,19 @@ def getEnvVar(String paramName){
 
 def TAG1
 pipeline{
+
     agent any
-	environment{
-		GIT_TAG=script:"grep '${paramName}' /opt/sample/$TAG1-ms.properties|cut -d'=' -f2", returnStdout: true
-	}
+
+	    GIT_TAG = "${sh(returnStdout: true, script: 'git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1')}"
+    GIT_COMMIT_HASH = "${sh(returnStdout: true, script: 'git log -n 1 --pretty=format:%H')}"
+  }
     stages {
 	
-	stage('Sence'){
+	/*stage('Sence'){
 			steps{
 sh '''
 			
-			#GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
-
-			#GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
+			=`git log -n 1 --pretty=format:%H`
 			
 		case  env.GIT_TAG  in
                 "consumeraddress")       
@@ -32,15 +32,22 @@ sh '''
           esac 
  '''
 			}
+			}*/
+        			stage('Print'){
+			steps{
+			sh '''
+
+		    echo env.GIT_TAG
+		echo env.GIT_COMMIT
+
+			'''
+			
 			}
-        
+			}
         stage('Initialization'){
             steps{
                //checkout scm;
-		    sh '''
-		    echo $TAG1
-		echo $GIT_COMMIT
-		    '''
+
                 script{
 			
                 env.BASE_DIR = pwd()
@@ -75,14 +82,7 @@ sh '''
        }
 	    
 	
-			stage('Print'){
-			steps{
-			sh '''
-			echo ${DEPLOYMENT_NAME}
-			'''
-			
-			}
-			}
+
         /*    
     
         stage('PreBuild'){
