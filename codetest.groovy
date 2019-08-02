@@ -1,5 +1,3 @@
-
-
 def getEnvVar(String paramName){
     //get the env from properties file
     return sh (script:"grep '${paramName}' /opt/sample/${TAG}-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
@@ -67,8 +65,7 @@ pipeline{
             }
        }
 	    
-	    
-    stages {
+	   
 	
 			stage('Sence'){
 			steps{
@@ -151,7 +148,6 @@ pipeline{
 		        }
             }
         }
-
          stage('Docker Containerisation'){
             steps{
                 //Builds the container from Dockerfile
@@ -200,7 +196,6 @@ pipeline{
                     gcloud container clusters get-credentials ${DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV} --zone ${DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV} 
                     GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
 					echo $GIT_COMMIT_HASH
-
                     sed -i s/latest/`echo $GIT_COMMIT_HASH`/g /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/manifest.yml/DEV/manifest-cm-${TAG}-ms_dev.yml
                     #Checks for any deployment
                     #kubectl get deployments ${DEPLOYMENT_NAME}
