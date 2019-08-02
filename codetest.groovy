@@ -1,4 +1,4 @@
-def getEnvVar(String paramName,String TAG1){
+def getEnvVar(String paramName){
     //get the env from properties file
     return sh (script:"grep '${paramName}' /opt/sample/${TAG1}-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
@@ -36,7 +36,7 @@ sh '''
             steps{
                //checkout scm;
 		    sh '''
-		    echo '$TAG1'
+		    echo $TAG1
 		echo $GIT_COMMIT_HASH
 		    '''
                 script{
