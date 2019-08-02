@@ -67,7 +67,7 @@ pipeline{
 	    
 	   
 	
-			stage('Sence'){
+			stage('Print'){
 			steps{
 			sh '''
 			echo ${DEPLOYMENT_NAME}
