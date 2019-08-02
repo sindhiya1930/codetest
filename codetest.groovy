@@ -17,10 +17,10 @@ pipeline{
 			
 		case  $GIT_TAG  in
                 "consumeraddress")       
- 			TAG1=$GIT_TAG
+ 			env.TAG1=$GIT_TAG
                     ;;
 		"consumerchild")       
- 		TAG1=$GIT_TAG
+ 		env.TAG1=$GIT_TAG
                     ;;
                 *)      
 		 echo"no tag"
