@@ -8,8 +8,8 @@ pipeline{
 
     agent any
 
-	    GIT_TAG = "${sh(returnStdout: true, script: 'git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1')}"
-    GIT_COMMIT_HASH = "${sh(returnStdout: true, script: 'git log -n 1 --pretty=format:%H')}"
+	    GIT_TAG = "${sh(returnStdout: true, script: "git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1")}"
+    GIT_COMMIT_HASH = "${sh(returnStdout: true, script: "git log -n 1 --pretty=format:%H")}"
   }
     stages {
 	
