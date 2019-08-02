@@ -8,9 +8,7 @@ pipeline{
 
     agent any
 
-	    define {
-       def TAG1 //undefined shared variable
-     }
+
     stages {
 	
 	/*stage('Sence'){
