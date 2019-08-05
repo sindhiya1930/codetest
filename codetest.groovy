@@ -1,8 +1,8 @@
 def getEnvVar(String paramName,String TAG1){
     //get the env from properties file
-    return sh (script:"grep '${paramName}' /opt/sample/${TAG1}-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
+    return sh (script:"grep '${paramName}' /opt/sample/'${TAG1}'-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
-def TAG1=''
+
 pipeline{
     agent any
 
@@ -14,10 +14,11 @@ pipeline{
 			GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
 			echo $GIT_COMMIT_HASH
 			GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
-			
+			echo $GIT_TAG
 		case  $GIT_TAG  in
                 "consumeraddress")       
  			TAG1=$GIT_TAG
+			echo $TAG1
                     ;;
 		"consumerchild")       
  		TAG1=$GIT_TAG
@@ -34,13 +35,11 @@ pipeline{
         stage('Initialization'){
             steps{
                //checkout scm;
-		    sh '''
-		    echo ${TAG1}
-		    '''
+
                 script{
 			
                 env.BASE_DIR = pwd()
-                env.IMAGE_NAME = getEnvVar('IMAGE_NAME',${TAG1})
+                env.IMAGE_NAME = getEnvVar('IMAGE_NAME','consumeraddress')
                 env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID')
                 env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE')
                 env.JENKINS_GCLOUD_K8S_CLUSTER_REGION = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_REGION')
