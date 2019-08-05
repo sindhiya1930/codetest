@@ -9,40 +9,7 @@ pipeline{
                GIT_TAG = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", , returnStdout: true).trim()
            }
     stages {
-	
-			stage('Sence'){
-			steps{
-			sh '''
-			#GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
-			#echo $GIT_COMMIT_HASH
-			#GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
-			echo $GIT_TAG
-		#case  $GIT_TAG  in
-                #"consumeraddress")       
- 			#TAG1=$GIT_TAG
-			#echo $TAG1
-                    #;;
-		#"consumerchild")       
- 		#TAG1=$GIT_TAG
-                   # ;;
-               #*)      
-		 #echo "no tag"
-                   # ;;
-          #esac 
-			'''
-			
-			}
-			}
-	    
-	    			stage('Print1'){
-			steps{
-			sh '''
-			echo $GIT_TAG
-			'''
-			
-			}
-			}
-        
+
         stage('Initialization'){
             steps{
                //checkout scm;
