@@ -35,7 +35,7 @@ sh '''
           #esac 
  '''
 			}
-			}*/
+			}
         			stage('Print'){
 			steps{
 			sh '''
