@@ -13,18 +13,9 @@ pipeline{
 	stage('Sence'){
 			steps{
 		sh '''
+				    echo ${GIT_TAG_NAME}
 		def GIT_TAG1 = `git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
-		#case  env.GIT_TAG  in
-                #"consumeraddress")       
- 			#TAG1=$GIT_TAG
-                   # ;;
-		#"consumerchild")       
- 		#TAG1=$GIT_TAG
-                   # ;;
-               # *)      
-		# echo"no tag"
-                  #  ;;
-          #esac 
+		    echo ${GIT_TAG1}
  '''
 			}
 			}
@@ -32,7 +23,7 @@ pipeline{
 			steps{
 			sh '''
 		    echo ${GIT_TAG1}
-		    echo ${GIT_TAG_NAME}
+
 		echo $GIT_COMMIT
 
 			'''
