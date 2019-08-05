@@ -15,7 +15,6 @@ pipeline{
 		  sh '''
 
 		GIT_TAG = `git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
-		    echo $GIT_TAG
 
 		  '''
 			}
