@@ -1,27 +1,19 @@
 def getEnvVar(String paramName){
     //get the env from properties file
-	return sh (script:"grep '${paramName}' /opt/sample/${TAG}-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
+	return sh (script:"grep '${paramName}' /opt/sample/consumeraddress-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
 
 
 pipeline{
 
     agent any
-environment {
-        //Using returnStdout
-        GIT_TAG = """${sh(
-                returnStdout: true,
-                script: "git describe --always| cut -d'_' -f1"
-            )}""" 
-//GIT_TAG = sh(returnStdout: true, script: "git describe --always| cut -d'_' -f1").trim()
-    }
 
     stages {
 	
 	stage('Sence'){
 			steps{
-sh '''
-			def GIT_TAG1 = `git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
+		sh '''
+		def GIT_TAG1 = `git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
 		#case  env.GIT_TAG  in
                 #"consumeraddress")       
  			#TAG1=$GIT_TAG
@@ -39,7 +31,6 @@ sh '''
         			stage('Print'){
 			steps{
 			sh '''
-echo ${GIT_TAG}
 		    echo ${GIT_TAG1}
 		    echo ${GIT_TAG_NAME}
 		echo $GIT_COMMIT
