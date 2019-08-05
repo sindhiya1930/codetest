@@ -16,16 +16,18 @@ pipeline{
 
 			GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
 			echo $GIT_COMMIT_HASH
-			GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f2`
+			GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
+			echo $GIT_TAG
 		case  $GIT_TAG  in
                 "consumeraddress")       
  			TAG=$GIT_TAG
+			echo $TAG
                     ;;
 		"consumerchild")       
  		TAG=$GIT_TAG
                     ;;
                 *)      
-		 echo"no tag"
+		 echo "no tag"
                     ;;
           esac 
 			'''
