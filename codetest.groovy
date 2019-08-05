@@ -1,20 +1,20 @@
 def getEnvVar(String paramName){
     //get the env from properties file
-    return sh (script:"grep '${paramName}' /opt/sample/$TAG-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
+	return sh (script:"grep '${paramName}' /opt/sample/${TAG}-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
 
-def TAG1
+
 pipeline{
 
     agent any
-environment {
+//environment {
         // Using returnStdout
-        GIT_TAG = """${sh(
-                returnStdout: true,
-                script: "git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1"
-            )}""" 
+        //GIT_TAG = """${sh(
+               // returnStdout: true,
+               // script: "git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1"
+           // )}""" 
 
-    }
+   // }
 
     stages {
 	
@@ -42,7 +42,7 @@ sh '''
 			steps{
 			sh '''
 
-		    echo ${env.GIT_TAG}
+		    echo ${TAG}
 		echo $GIT_COMMIT
 
 			'''
