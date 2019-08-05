@@ -18,31 +18,30 @@ environment {
 
     stages {
 	
-	/*stage('Sence'){
+	stage('Sence'){
 			steps{
 sh '''
-			GIT_TAG = `git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
-			GIT_COMMIT_HASH ==`git log -n 1 --pretty=format:%H`
-			
-		case  env.GIT_TAG  in
-                "consumeraddress")       
- 			TAG1=$GIT_TAG
-                    ;;
-		"consumerchild")       
- 		TAG1=$GIT_TAG
-                    ;;
-                *)      
-		 echo"no tag"
-                    ;;
-          esac 
+			def GIT_TAG1 = `git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
+		#case  env.GIT_TAG  in
+                #"consumeraddress")       
+ 			#TAG1=$GIT_TAG
+                   # ;;
+		#"consumerchild")       
+ 		#TAG1=$GIT_TAG
+                   # ;;
+               # *)      
+		# echo"no tag"
+                  #  ;;
+          #esac 
  '''
 			}
 			}*/
         			stage('Print'){
 			steps{
 			sh '''
-
-		    echo ${GIT_TAG}
+echo ${GIT_TAG}
+		    echo ${GIT_TAG1}
+		    echo ${GIT_TAG_NAME}
 		echo $GIT_COMMIT
 
 			'''
