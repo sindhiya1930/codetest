@@ -1,4 +1,4 @@
-def getEnvVar(String paramName,String TAG1){
+def getEnvVar(String paramName){
     //get the env from properties file
     return sh (script:"grep '${paramName}' /opt/sample/$GIT_TAG-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
