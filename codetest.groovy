@@ -1,6 +1,6 @@
 def getEnvVar(String paramName){
     //get the env from properties file
-    return sh (script:"grep '${paramName}' /opt/sample/$GIT_TAG-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
+    return sh (script:"grep '${paramName}' /opt/sample/$GIT_TAG.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
 
 pipeline{
