@@ -1,6 +1,6 @@
 def getEnvVar(String paramName,String TAG1){
     //get the env from properties file
-    return sh (script:"grep '${paramName}' /opt/sample/'${TAG1}'-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
+    return sh (script:"grep '${paramName}' /opt/sample/$GIT_COMMIT-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
 
 pipeline{
@@ -35,14 +35,10 @@ pipeline{
         stage('Initialization'){
             steps{
                //checkout scm;
-			sh '''
-			GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
-			echo $GIT_TAG
-			'''
+
                 script{
-			echo $GIT_TAG
                 env.BASE_DIR = pwd()
-                env.IMAGE_NAME = getEnvVar('IMAGE_NAME','$GIT_TAG')
+                env.IMAGE_NAME = getEnvVar('IMAGE_NAME',$GIT_COMMIT)
                 env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID','consumeraddress')
                 env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE','consumeraddress')
                 env.JENKINS_GCLOUD_K8S_CLUSTER_REGION = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_REGION','consumeraddress')
