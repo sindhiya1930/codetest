@@ -26,7 +26,7 @@ pipeline{
                     env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV')
                     env.DEPLOYMENT_NAME=getEnvVar('DEPLOYMENT_NAME')
 					env.PARAMETERS=getEnvVar('PARAMETERS')
-					env.URLL=getEnvVar('URL')
+					env.URL=getEnvVar('URL')
                     env.PATH_TO_PARENT_POM=getEnvVar('PATH_TO_PARENT_POM')
                 }
             }
