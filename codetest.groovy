@@ -1,52 +1,46 @@
-def getEnvVar(String paramName,String TAG){
+def getEnvVar(String paramName,String TAG1){
     //get the env from properties file
-	return sh (script:"grep '${paramName}' /opt/sample/'${TAG}'-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
+    return sh (script:"grep '${paramName}' /opt/sample/${TAG1}-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
-
-
+def TAG1=''
 pipeline{
-
     agent any
 
     stages {
 	
-	stage('Sence'){
+			stage('Sence'){
 			steps{
-		  sh '''
-
+			sh '''
 			GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
 			echo $GIT_COMMIT_HASH
 			GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
-			echo $GIT_TAG
+			
 		case  $GIT_TAG  in
                 "consumeraddress")       
- 			TAG=$GIT_TAG
-			echo $TAG
+ 			TAG1=$GIT_TAG
                     ;;
 		"consumerchild")       
- 		TAG=$GIT_TAG
+ 		TAG1=$GIT_TAG
                     ;;
                 *)      
 		 echo "no tag"
                     ;;
           esac 
 			'''
-
-
+			
 			}
 			}
-
+        
         stage('Initialization'){
             steps{
                //checkout scm;
-sh '''
-		GIT_TAG = `git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
-		echo $GIT_TAG
-'''
+		    sh '''
+		    echo ${TAG1}
+		    '''
                 script{
-	
+			
                 env.BASE_DIR = pwd()
-                env.IMAGE_NAME = getEnvVar('IMAGE_NAME','$GIT_TAG')
+                env.IMAGE_NAME = getEnvVar('IMAGE_NAME',${TAG1})
                 env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID')
                 env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE')
                 env.JENKINS_GCLOUD_K8S_CLUSTER_REGION = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_REGION')
@@ -76,8 +70,16 @@ sh '''
             }
        }
 	    
+	   
 	
-
+			stage('Print'){
+			steps{
+			sh '''
+			echo ${DEPLOYMENT_NAME}
+			'''
+			
+			}
+			}
         /*    
     
         stage('PreBuild'){
@@ -86,7 +88,7 @@ sh '''
                 sh '''
                 #description : The script is used to fetch the dependent shared module with respect to the microservice.
                 #!/bin/bash
-		mkdir /var/lib/jenkins/workspace/${JOB_NAME}/ConsumerChild-ms
+				mkdir /var/lib/jenkins/workspace/${JOB_NAME}/ConsumerChild-ms
                 #Transfer of microservice and API files to the workspace
                 cp -r /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/Microservice/ConsumerChild-ms/* /var/lib/jenkins/workspace/${JOB_NAME}/ConsumerChild-ms/
                 #Get the list of shared modules currently present
