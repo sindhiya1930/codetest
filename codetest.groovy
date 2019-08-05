@@ -33,6 +33,15 @@ pipeline{
 			
 			}
 			}
+	    
+	    			stage('Print1'){
+			steps{
+			sh '''
+			echo $GIT_TAG
+			'''
+			
+			}
+			}
         
         stage('Initialization'){
             steps{
@@ -40,7 +49,7 @@ pipeline{
 
                 script{
                 env.BASE_DIR = pwd()
-                env.IMAGE_NAME = getEnvVar('IMAGE_NAME','consumeraddress')
+                env.IMAGE_NAME = getEnvVar('IMAGE_NAME',$GIT_TAG)
                 env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID','consumeraddress')
                 env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE','consumeraddress')
                 env.JENKINS_GCLOUD_K8S_CLUSTER_REGION = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_REGION','consumeraddress')
