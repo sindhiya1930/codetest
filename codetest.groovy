@@ -15,16 +15,16 @@ pipeline{
 		  script{
 				    echo ${GIT_TAG_NAME}
 		GIT_TAG1 = `git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
-		    echo ${GIT_TAG1}
+		    echo "$GIT_TAG1"
 		  }
 			}
 			}
         			stage('Print'){
 			steps{
 			sh '''
-		    echo ${GIT_TAG1}
+		    echo $GIT_TAG1
 
-		echo $GIT_COMMIT
+		echo "$GIT_COMMIT"
 
 			'''
 			
