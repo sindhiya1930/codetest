@@ -14,9 +14,23 @@ pipeline{
 			steps{
 		  sh '''
 
-		GIT_TAG = `git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
+			GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
+			echo $GIT_COMMIT_HASH
+			GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f2`
+		case  $GIT_TAG  in
+                "consumeraddress")       
+ 			TAG=$GIT_TAG
+                    ;;
+		"consumerchild")       
+ 		TAG=$GIT_TAG
+                    ;;
+                *)      
+		 echo"no tag"
+                    ;;
+          esac 
+			'''
 
-		  '''
+
 			}
 			}
 
