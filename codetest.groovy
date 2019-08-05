@@ -35,11 +35,14 @@ pipeline{
         stage('Initialization'){
             steps{
                //checkout scm;
-
+			sh '''
+			GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
+			echo $GIT_TAG
+			'''
                 script{
 			
                 env.BASE_DIR = pwd()
-                env.IMAGE_NAME = getEnvVar('IMAGE_NAME','consumeraddress')
+                env.IMAGE_NAME = getEnvVar('IMAGE_NAME',$GIT_TAG)
                 env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID','consumeraddress')
                 env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE','consumeraddress')
                 env.JENKINS_GCLOUD_K8S_CLUSTER_REGION = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_REGION','consumeraddress')
