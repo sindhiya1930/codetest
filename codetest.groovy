@@ -8,12 +8,12 @@ pipeline{
 
     agent any
 environment {
-        Using returnStdout
+        //Using returnStdout
         GIT_TAG = """${sh(
                 returnStdout: true,
                 script: "git describe --always| cut -d'_' -f1"
             )}""" 
-
+//GIT_TAG = sh(returnStdout: true, script: "git describe --always| cut -d'_' -f1").trim()
     }
 
     stages {
