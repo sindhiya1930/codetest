@@ -1,6 +1,6 @@
 def getEnvVar(String paramName,String TAG1){
     //get the env from properties file
-    return sh (script:"grep '${paramName}' /opt/sample/$GIT_COMMIT-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
+    return sh (script:"grep '${paramName}' /opt/sample/$GIT_TAG-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
 
 pipeline{
@@ -49,24 +49,24 @@ pipeline{
 
                 script{
                 env.BASE_DIR = pwd()
-                env.IMAGE_NAME = getEnvVar('IMAGE_NAME','$GIT_TAG')
-                env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID','consumeraddress')
-                env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE','consumeraddress')
-                env.JENKINS_GCLOUD_K8S_CLUSTER_REGION = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_REGION','consumeraddress')
-                env.DEPLOY_GCLOUD_PROJECT_ID_DEV= getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_DEV','consumeraddress')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV','consumeraddress')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV','consumeraddress')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV','consumeraddress')
+                env.IMAGE_NAME = getEnvVar('IMAGE_NAME')
+                env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID')
+                env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE')
+                env.JENKINS_GCLOUD_K8S_CLUSTER_REGION = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_REGION')
+                env.DEPLOY_GCLOUD_PROJECT_ID_DEV= getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_DEV')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV')
                 env.DEPLOY_GCLOUD_PROJECT_ID_QA = getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_QA','consumeraddress')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_QA','consumeraddress')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_QA','consumeraddress')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_QA','consumeraddress')
-                env.DEPLOY_GCLOUD_PROJECT_ID_PREPROD = getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_PREPROD','consumeraddress')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_PREPROD','consumeraddress')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_PREPROD','consumeraddress')
-                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_PREPROD','consumeraddress')
-                env.DEPLOYMENT_NAME=getEnvVar('DEPLOYMENT_NAME','consumeraddress')
-                env.PATH_TO_PARENT_POM=getEnvVar('PATH_TO_PARENT_POM','consumeraddress')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_QA')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_QA')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_QA  = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_QA')
+                env.DEPLOY_GCLOUD_PROJECT_ID_PREPROD = getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_PREPROD')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_PREPROD')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_PREPROD')
+                env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_PREPROD = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_PREPROD')
+                env.DEPLOYMENT_NAME=getEnvVar('DEPLOYMENT_NAME')
+                env.PATH_TO_PARENT_POM=getEnvVar('PATH_TO_PARENT_POM')
                 }
             }
         }
