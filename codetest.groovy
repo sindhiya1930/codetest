@@ -7,14 +7,14 @@ def getEnvVar(String paramName){
 pipeline{
 
     agent any
-
+def GIT_TAG1
     stages {
 	
 	stage('Sence'){
 			steps{
 		sh '''
 				    echo ${GIT_TAG_NAME}
-		def GIT_TAG1 = `git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
+		GIT_TAG1 = `git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
 		    echo ${GIT_TAG1}
  '''
 			}
