@@ -11,7 +11,7 @@ environment {
         // Using returnStdout
         GIT_TAG = """${sh(
                 returnStdout: true,
-                script: 'git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1'
+                script: "git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1"
             )}""" 
 
     }
