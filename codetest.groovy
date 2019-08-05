@@ -42,7 +42,7 @@ sh '''
 			steps{
 			sh '''
 
-		    echo ${TAG}
+		    echo ${GIT_TAG}
 		echo $GIT_COMMIT
 
 			'''
