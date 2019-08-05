@@ -35,11 +35,7 @@ pipeline{
         stage('Git Checkout') { // for display purposes 
             steps{
                 cleanWs()
-		checkout([$class: 'GitSCM', branches: [[name: '*/dev']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'PathRestriction', excludedRegions: '', includedRegions: '''^code_rearch/${CATEGORY}/${NAME}/Mattel.CM.${NAME}.${CATEGORY}.application.parent/.*
-^code_rearch/${CATEGORY}/${NAME}/Mattel.CM.${NAME}.${CATEGORY}.application/.*
-^code_rearch/${CATEGORY}/${NAME}/Mattel.CM.${NAME}.${CATEGORY}/.*
-^code_rearch/SharedModules/Mattel.CM.Common.SharedModule/.*
-^code_rearch/SharedModules/com.tibco.cle.client/.*''']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-service-acc', url: 'https://github.com/mattel-dig/ConsumerMaster--GSL-.git']]])
+		checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/**']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'd5645694-e9d9-4da8-8ef2-dcf70c5e4461', url: 'https://github.com/sindhiya1930/codetest.git']]])
 	    }
 	}
     
