@@ -3,20 +3,20 @@ def getEnvVar(String paramName){
 	return sh (script:"grep '${paramName}' /opt/sample/consumeraddress-ms.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
 
-
+def GIT_TAG1
 pipeline{
 
     agent any
-def GIT_TAG1
+
     stages {
 	
 	stage('Sence'){
 			steps{
-		sh '''
+		  script{
 				    echo ${GIT_TAG_NAME}
 		GIT_TAG1 = `git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
 		    echo ${GIT_TAG1}
- '''
+		  }
 			}
 			}
         			stage('Print'){
