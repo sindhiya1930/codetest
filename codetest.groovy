@@ -6,14 +6,10 @@ pipeline{
     agent any
            environment {
                SERVICE_NAME = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", , returnStdout: true).trim()
-	
-           }
+          }
    
 	stages {
-		
-
-
-       stage('Initialization'){
+	stage('Initialization'){
             steps{
                 //checkout scm
                 script{
@@ -31,7 +27,6 @@ pipeline{
 		env.PARAMETERS = getEnvVar('PARAMETERS')
 		env.URL = getEnvVar('URL')
                     env.PATH_TO_PARENT_POM = getEnvVar('PATH_TO_PARENT_POM')
-
                 }
             }
         }
@@ -42,8 +37,7 @@ pipeline{
 		checkout([$class: 'GitSCM', branches: [[name: '*/dev']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-service-acc', url: 'https://github.com/mattel-dig/ConsumerMaster--GSL-.git']]])
 	    }
 	}
-	    
-    
+   
         stage('PreBuild'){
             steps{
                 //Builds the container from Dockerfile
@@ -85,15 +79,15 @@ pipeline{
                 step([$class: 'TibcoBartPipeline', 
     	              bartHome:'/opt/Bart_home',
     	              bartVer:'1.0',
-    	              projectName:"Mattel.CM.${SERVICENAME}.${CATEGORY}.application",
-    	              projectWorkSpace:"/var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}",
+    	              projectName:"Mattel.CM.${SERVICE_NAME}.${CATEGORY}.application",
+    	              projectWorkSpace:"/var/lib/jenkins/workspace/${JOB_NAME}/${SERVICE_NAME}",
     	              reportDir:"${workspace}"])
 		    
 		   
         	}
         }
     
-      /*   stage('Build') {
+         stage('Build') {
             steps {
                 //build using pom.xml - specify the path of the parent pom
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'subram',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
@@ -108,20 +102,20 @@ pipeline{
 		git init
 		git clone -b dev --single-branch https://$USERNAME:$PASSWORD@github.com/mattel-dig/ConsumerMaster--GSL-.git
 		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/
-		if [ ! -d "${SERVICENAME}" ]; then
-  		mkdir -p ${SERVICENAME}
+		if [ ! -d "${SERVICE_NAME}" ]; then
+  		mkdir -p ${SERVICE_NAME}
 		fi
-		cp /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application/target/Mattel.CM.${SERVICENAME}.${CATEGORY}.application_1.0.0.ear /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application_$(date +%Y%m%d_%H%M%S).ear
-		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICENAME}/
-		git add Mattel.CM.${SERVICENAME}.${CATEGORY}.application_$(date +%Y%m%d_%H)*.ear
+		cp /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICE_NAME}/Mattel.CM.${SERVICE_NAME}.${CATEGORY}.application/target/Mattel.CM.${SERVICE_NAME}.${CATEGORY}.application_1.0.0.ear /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICE_NAME}/Mattel.CM.${SERVICE_NAME}.${CATEGORY}.application_$(date +%Y%m%d_%H%M%S).ear
+		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICE_NAME}/
+		git add Mattel.CM.${SERVICE_NAME}.${CATEGORY}.application_$(date +%Y%m%d_%H)*.ear
 		git commit -m "$(date +%Y%m%d_%H%M)"
 		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}
-		if [ ! -d "${SERVICENAME}" ]; then
-  		mkdir -p ${SERVICENAME}
+		if [ ! -d "${SERVICE_NAME}" ]; then
+  		mkdir -p ${SERVICE_NAME}
 		fi
-		cp /var/lib/jenkins/workspace/${JOB_NAME}/*.html /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICENAME}/${SERVICENAME}_report_$(date +%Y%m%d_%H%M%S).html
-		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICENAME}/
-		git add ${SERVICENAME}_report_$(date +%Y%m%d_%H%M)*.html
+		cp /var/lib/jenkins/workspace/${JOB_NAME}/*.html /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICE_NAME}/${SERVICE_NAME}_report_$(date +%Y%m%d_%H%M%S).html
+		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICE_NAME}/
+		git add ${SERVICE_NAME}_report_$(date +%Y%m%d_%H%M)*.html
 		git commit -m "$(date +%Y%m%d_%H%M)"
 		git push https://$USERNAME:$PASSWORD@github.com/mattel-dig/ConsumerMaster--GSL-/ dev
 		rm -rf /opt/git/dev/${JOB_NAME}/*
@@ -137,8 +131,8 @@ pipeline{
                 sh '''
                 GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
                 echo $GIT_COMMIT_HASH
-                cd /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application/target/
-                cp /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/dockerfiles/${CATEGORY}/${SERVICENAME}/Dockerfile Dockerfile
+                cd /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICE_NAME}/Mattel.CM.${SERVICE_NAME}.${CATEGORY}.application/target/
+                cp /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/dockerfiles/${CATEGORY}/${SERVICE_NAME}/Dockerfile Dockerfile
                 docker build -t gcr.io/${JENKINS_GCLOUD_PROJECT_ID}/${IMAGE_NAME}:$GIT_COMMIT_HASH .
                 ''' 
             }   
@@ -159,7 +153,8 @@ pipeline{
                 ''' 
             }
         }
-    stage('Deployment to DEV GKE'){
+
+/*    stage('Deployment to DEV GKE'){
             steps{
                 withCredentials([file(credentialsId: 'mattelCreds', variable: 'mattel')]) {
                     sh '''
