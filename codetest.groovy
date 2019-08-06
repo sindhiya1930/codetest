@@ -68,12 +68,12 @@ pipeline{
                 #description : The script is used to fetch the dependent shared module with respect to the API.
                 #!/bin/bash
 		echo ${SERVICENAME}
-		 mkdir /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICENAME
-		 chmod -R 777 /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICENAME
+		 mkdir /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/$SERVICENAME
+		 chmod -R 777 /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/$SERVICENAME
                 #Transfer of API and API files to the workspace
-                cp -r /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/${CATEGORY}/$SERVICENAME/* /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICENAME/
+                cp -r /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/code_rearch/${CATEGORY}/$SERVICENAME/* /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/$SERVICENAME/
                 #Get the list of shared modules currently present
-                cd /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICENAME
+                cd /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/$SERVICENAME
                 ls | grep 'Mattel.*.parent' > ms_parent.txt
                 B="`cat ms_parent.txt`"
                 cd /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/SharedModules/
@@ -82,11 +82,11 @@ pipeline{
                 shared_module="`echo $A`"
                 for i in $shared_module
                     do
-                        module=`grep $i /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/${CATEGORY}/${SERVICENAME}/ReadMe.txt | wc -l`
+                        module=`grep $i /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/code_rearch/${CATEGORY}/${SERVICENAME}/ReadMe.txt | wc -l`
                         if [ $module -eq 1 ]; then
                             echo "Shared module is present in the ReadMe.txt and has to be copied to the workspace"
-                            cp -r $i /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}/
-                            sed -i "s/Mattel.*.parent/`echo $B`/g" /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}/$i/pom.xml
+                            cp -r $i /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/${SERVICENAME}/
+                            sed -i "s/Mattel.*.parent/`echo $B`/g" /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/${SERVICENAME}/$i/pom.xml
                         else
                             echo "Shared Module not present in the ReadMe.txt"
                         fi
