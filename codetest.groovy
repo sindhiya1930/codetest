@@ -56,7 +56,7 @@ pipeline{
         stage('Git Checkout') { // for display purposes 
             steps{
                 cleanWs()
-		checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/**']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'd5645694-e9d9-4da8-8ef2-dcf70c5e4461', url: 'https://github.com/sindhiya1930/codetest.git']]])
+		checkout([$class: 'GitSCM', branches: [[name: '*/dev']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-service-acc', url: 'https://github.com/mattel-dig/ConsumerMaster--GSL-.git']]])
 	    }
 	}
 	    
@@ -68,25 +68,25 @@ pipeline{
                 #description : The script is used to fetch the dependent shared module with respect to the API.
                 #!/bin/bash
 		echo ${SERVICENAME}
-		 mkdir /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/$SERVICENAME
-		 chmod -R 777 /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/$SERVICENAME
+		 mkdir /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICENAME
+		 chmod -R 777 /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICENAME
                 #Transfer of API and API files to the workspace
-                cp -r /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/code_rearch/${CATEGORY}/$SERVICENAME/* /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/$SERVICENAME/
+                cp -r /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/${CATEGORY}/$SERVICENAME/* /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICENAME/
                 #Get the list of shared modules currently present
-                cd /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/$SERVICENAME
+                cd /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICENAME
                 ls | grep 'Mattel.*.parent' > ms_parent.txt
                 B="`cat ms_parent.txt`"
-                cd /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/code_rearch/SharedModules/
+                cd /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/SharedModules/
                 ls > SM_list.txt
                 A="`cat SM_list.txt`"
                 shared_module="`echo $A`"
                 for i in $shared_module
                     do
-                        module=`grep $i /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/code_rearch/${CATEGORY}/${SERVICENAME}/ReadMe.txt | wc -l`
+                        module=`grep $i /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/${CATEGORY}/${SERVICENAME}/ReadMe.txt | wc -l`
                         if [ $module -eq 1 ]; then
                             echo "Shared module is present in the ReadMe.txt and has to be copied to the workspace"
-                            cp -r $i /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/${SERVICENAME}/
-                            sed -i "s/Mattel.*.parent/`echo $B`/g" /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/${SERVICENAME}/$i/pom.xml
+                            cp -r $i /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}/
+                            sed -i "s/Mattel.*.parent/`echo $B`/g" /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}/$i/pom.xml
                         else
                             echo "Shared Module not present in the ReadMe.txt"
                         fi
@@ -103,40 +103,40 @@ pipeline{
     	              bartHome:'/opt/Bart_home',
     	              bartVer:'1.0',
     	              projectName:"Mattel.CM.${SERVICENAME}.${CATEGORY}.application",
-    	              projectWorkSpace:"/var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/${SERVICENAME}",
+    	              projectWorkSpace:"/var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}",
     	              reportDir:"${workspace}"])
 		    
 		   
         	}
         }
     
-        stage('Build') {
+      /*  stage('Build') {
             steps {
                 //build using pom.xml - specify the path of the parent pom
-                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '4f18f877-3658-4932-98f0-eb4d12fe1d82',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'subram',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                     sh '''
-                    mvn -f /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/${PATH_TO_PARENT_POM}/pom.xml clean install
-		#cd /opt/git/dev/ | mkdir -p Phase1B/cm-consumeraddress-ms
-		#cd /opt/git/dev/Phase1B/cm-consumeraddress-ms/
-		#git init
-		#git clone -b dev --single-branch https://$USERNAME:$PASSWORD@github.com/mattel-dig/ConsumerMaster--GSL-.git
-		#cp /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application/target/Mattel.CM.${SERVICENAME}.${CATEGORY}.application_1.0.0.ear /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application_$(date +%Y%m%d_%H%M%S).ear
-		#cd /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICENAME${}/
-		#git add Mattel.CM.${SERVICENAME}.${CATEGORY}.application_$(date +%Y%m%d_%H)*.ear
-		#git commit -m "$(date +%Y%m%d_%H%M)"
-		#cp /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/*.html /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICENAME}/${SERVICENAME}_report_$(date +%Y%m%d_%H%M%S).html
-		#cd /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICENAME}/
-		#git add ${SERVICENAME}_report_$(date +%Y%m%d_%H%M)*.html
-		#git commit -m "$(date +%Y%m%d_%H%M)"
-		#git push https://$USERNAME:$PASSWORD@github.com/mattel-dig/ConsumerMaster--GSL-/ dev
-		#rm -rf /opt/git/dev/Phase1B/cm-consumeraddress-ms/*
+                    mvn -f ${PATH_TO_PARENT_POM}/pom.xml clean install
+		cd /opt/git/dev/ | mkdir -p Phase1B/cm-consumeraddress-ms
+		cd /opt/git/dev/Phase1B/cm-consumeraddress-ms/
+		git init
+		git clone -b master --single-branch https://$USERNAME:$PASSWORD@github.com/mattel-dig/ConsumerMaster--GSL-.git
+		cp /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application/target/Mattel.CM.${SERVICENAME}.${CATEGORY}.application_1.0.0.ear /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application_$(date +%Y%m%d_%H%M%S).ear
+		cd /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICENAME${}/
+		git add Mattel.CM.${SERVICENAME}.${CATEGORY}.application_$(date +%Y%m%d_%H)*.ear
+		git commit -m "$(date +%Y%m%d_%H%M)"
+		cp /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/*.html /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICENAME}/${SERVICENAME}_report_$(date +%Y%m%d_%H%M%S).html
+		cd /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICENAME}/
+		git add ${SERVICENAME}_report_$(date +%Y%m%d_%H%M)*.html
+		git commit -m "$(date +%Y%m%d_%H%M)"
+		git push https://$USERNAME:$PASSWORD@github.com/mattel-dig/ConsumerMaster--GSL-/ dev
+		rm -rf /opt/git/dev/Phase1B/cm-consumeraddress-ms/*
 		
 				'''
                 }
             }
         }
         
-        /*stage('Docker Containerisation'){
+        stage('Docker Containerisation'){
             steps{
                 //Builds the container from Dockerfile
                 sh '''
