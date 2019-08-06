@@ -109,34 +109,34 @@ pipeline{
 		   
         	}
         }
-    /*
+    
         stage('Build') {
             steps {
                 //build using pom.xml - specify the path of the parent pom
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'subram',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                     sh '''
                     mvn -f ${PATH_TO_PARENT_POM}/pom.xml clean install
-		cd /opt/git/dev/ | mkdir -p Phase1B/cm-consumeraddress-ms
-		cd /opt/git/dev/Phase1B/cm-consumeraddress-ms/
-		git init
-		git clone -b dev --single-branch https://$USERNAME:$PASSWORD@github.com/mattel-dig/ConsumerMaster--GSL-.git
-		cp /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application/target/Mattel.CM.${SERVICENAME}.${CATEGORY}.application_1.0.0.ear /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application_$(date +%Y%m%d_%H%M%S).ear
-		cd /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICENAME${}/
-		git add Mattel.CM.${SERVICENAME}.${CATEGORY}.application_$(date +%Y%m%d_%H)*.ear
-		git commit -m "$(date +%Y%m%d_%H%M)"
-		cp /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/*.html /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICENAME}/${SERVICENAME}_report_$(date +%Y%m%d_%H%M%S).html
-		cd /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICENAME}/
-		git add ${SERVICENAME}_report_$(date +%Y%m%d_%H%M)*.html
-		git commit -m "$(date +%Y%m%d_%H%M)"
-		git push https://$USERNAME:$PASSWORD@github.com/mattel-dig/ConsumerMaster--GSL-/ dev
-		rm -rf /opt/git/dev/Phase1B/cm-consumeraddress-ms/*
+		#cd /opt/git/dev/ | mkdir -p Phase1B/cm-consumeraddress-ms
+		#cd /opt/git/dev/Phase1B/cm-consumeraddress-ms/
+		#git init
+		#git clone -b dev --single-branch https://$USERNAME:$PASSWORD@github.com/mattel-dig/ConsumerMaster--GSL-.git
+		#cp /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application/target/Mattel.CM.${SERVICENAME}.${CATEGORY}.application_1.0.0.ear /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application_$(date +%Y%m%d_%H%M%S).ear
+		#cd /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICENAME${}/
+		#git add Mattel.CM.${SERVICENAME}.${CATEGORY}.application_$(date +%Y%m%d_%H)*.ear
+		#git commit -m "$(date +%Y%m%d_%H%M)"
+		#cp /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/*.html /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICENAME}/${SERVICENAME}_report_$(date +%Y%m%d_%H%M%S).html
+		#cd /opt/git/dev/Phase1B/cm-consumeraddress-ms/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICENAME}/
+		#git add ${SERVICENAME}_report_$(date +%Y%m%d_%H%M)*.html
+		#git commit -m "$(date +%Y%m%d_%H%M)"
+		#git push https://$USERNAME:$PASSWORD@github.com/mattel-dig/ConsumerMaster--GSL-/ dev
+		#rm -rf /opt/git/dev/Phase1B/cm-consumeraddress-ms/*
 		
 				'''
                 }
             }
         }
         
-        stage('Docker Containerisation'){
+        /*stage('Docker Containerisation'){
             steps{
                 //Builds the container from Dockerfile
                 sh '''
