@@ -29,7 +29,7 @@ pipeline{
 		env.PARAMETERS = getEnvVar('PARAMETERS')
 		env.URL = getEnvVar('URL')
                 env.PATH_TO_PARENT_POM = getEnvVar('PATH_TO_PARENT_POM')
-		env.ProjectName = getEnvVar('Bart_ProjectName')	
+		env.B_ProjectName = getEnvVar('Bart_ProjectName')	
                 }
             }
         }
@@ -84,11 +84,12 @@ pipeline{
                 step([$class: 'TibcoBartPipeline', 
     	              bartHome:'/opt/Bart_home',
     	              bartVer:'1.0',
-    	              projectName:"${ProjectName}",
+    	              projectName:"${B_ProjectName}",
     	              projectWorkSpace:"/var/lib/jenkins/workspace/${JOB_NAME}/${SERVICE_NAME}",
     	              reportDir:"${workspace}"])
 		  }
         	}
+
     
          stage('Build') {
             steps {
@@ -108,9 +109,9 @@ pipeline{
 		if [ ! -d "${SERVICE_NAME}" ]; then
   		mkdir -p ${SERVICE_NAME}
 		fi
-		cp /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICE_NAME}/${ProjectName}/target/${ProjectName}_1.0.0.ear /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICE_NAME}/${ProjectName}_$(date +%Y%m%d_%H%M%S).ear
+		cp /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICE_NAME}/${B_ProjectName}/target/${B_ProjectName}_1.0.0.ear /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICE_NAME}/${B_ProjectName}_$(date +%Y%m%d_%H%M%S).ear
 		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICE_NAME}/
-		git add ${ProjectName}_$(date +%Y%m%d_%H)*.ear
+		git add ${B_ProjectName}_$(date +%Y%m%d_%H)*.ear
 		git commit -m "$(date +%Y%m%d_%H%M)"
 		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}
 		if [ ! -d "${SERVICE_NAME}" ]; then
@@ -134,7 +135,7 @@ pipeline{
                 sh '''
                 GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
                 echo $GIT_COMMIT_HASH
-                cd /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICE_NAME}/${ProjectName}/target/
+                cd /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICE_NAME}/${B_ProjectName}/target/
                 cp /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/dockerfiles/${CATEGORY}/${SERVICE_NAME}/Dockerfile Dockerfile
                 docker build -t gcr.io/${JENKINS_GCLOUD_PROJECT_ID}/${IMAGE_NAME}:$GIT_COMMIT_HASH .
                 ''' 
@@ -218,3 +219,4 @@ pipeline{
 */
 }
 }
+		
