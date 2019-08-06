@@ -27,10 +27,10 @@ pipeline{
                     env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV')
                     env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV')
                     env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV')
-                    env.DEPLOYMENT_NAME=getEnvVar('DEPLOYMENT_NAME')
-		env.PARAMETERS=getEnvVar('PARAMETERS')
-		env.URL=getEnvVar('URL')
-                    env.PATH_TO_PARENT_POM=getEnvVar('PATH_TO_PARENT_POM')
+                    env.DEPLOYMENT_NAME = getEnvVar('DEPLOYMENT_NAME')
+		env.PARAMETERS = getEnvVar('PARAMETERS')
+		env.URL = getEnvVar('URL')
+                    env.PATH_TO_PARENT_POM = getEnvVar('PATH_TO_PARENT_POM')
                 }
             }
         }
