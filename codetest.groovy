@@ -6,6 +6,7 @@ pipeline{
     agent any
            environment {
                GIT_TAG = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", , returnStdout: true).trim()
+		SERVICE
            }
    
 	stages {
@@ -20,7 +21,6 @@ pipeline{
                 env.IMAGE_NAME = getEnvVar('IMAGE_NAME')
 		env.SERVICENAME = getEnvVar('SERVICENAME')
 		env.CATEGORY = getEnvVar('CATEGORY')
-
                     env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID')
                     env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE')
                     env.JENKINS_GCLOUD_K8S_CLUSTER_REGION = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_REGION')
@@ -36,23 +36,7 @@ pipeline{
                 }
             }
         }
-           stage('Test'){
-            steps{
-                //checkout scm
-                sh '''
-		echo $IMAGE_NAME
-		echo $CATEGORY
-		echo $SERVICENAME
-		echo $JENKINS_GCLOUD_PROJECT_ID
-		echo $PARAMETERS
-		echo $URL
-		echo $PATH_TO_PARENT_POM
-		
-		'''
 
-
-            }
-        }
         stage('Git Checkout') { // for display purposes 
             steps{
                 cleanWs()
