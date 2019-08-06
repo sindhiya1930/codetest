@@ -5,9 +5,9 @@ def getEnvVar(String paramName){
 
 pipeline{
     agent any
-           //environment {
-               //GIT_TAG = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", , returnStdout: true).trim()
-           //}
+           environment {
+               GIT_TAG = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", , returnStdout: true).trim()
+           }
    
 	stages {
 		
@@ -16,7 +16,7 @@ pipeline{
 			sh '''
 			#GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
 			#echo $GIT_COMMIT_HASH
-			GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
+			#GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
 			echo $GIT_TAG
 		#case  $GIT_TAG  in
                 #"consumeraddress")       
