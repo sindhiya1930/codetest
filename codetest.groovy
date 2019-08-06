@@ -29,7 +29,7 @@ pipeline{
 		env.PARAMETERS = getEnvVar('PARAMETERS')
 		env.URL = getEnvVar('URL')
                 env.PATH_TO_PARENT_POM = getEnvVar('PATH_TO_PARENT_POM')
-		env.B_ProjectName = getEnvVar('Bart_ProjectName')	
+		env.B_ProjectName = getEnvVar('B_ProjectName')	
                 }
             }
         }
