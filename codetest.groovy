@@ -171,9 +171,8 @@ pipeline{
                     #Though --zone is mentioned for get-credentials ,provide the region
                     gcloud container clusters get-credentials ${DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV} --zone ${DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV} 
                     GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
-					echo $GIT_COMMIT_HASH
-                    
-					sed -i s/latest/`echo $GIT_COMMIT_HASH`/g /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/manifest.yml/DEV/manifest-cm-${GIT_TAG}_dev.yml
+		    echo $GIT_COMMIT_HASH
+                    sed -i s/latest/`echo $GIT_COMMIT_HASH`/g /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/manifest.yml/DEV/manifest-cm-${GIT_TAG}_dev.yml
                     #Checks for any deployment
                     #kubectl get deployments ${DEPLOYMENT_NAME}
                     #RESULT=$?
