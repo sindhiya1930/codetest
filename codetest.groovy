@@ -10,16 +10,7 @@ pipeline{
    
 	stages {
 		
-       stage('Test'){
-            steps{
-                //checkout scm
-                sh '''
-		echo $GIT_TAG
-		'''
 
-
-            }
-        }
 
        stage('Initialization'){
             steps{
@@ -45,7 +36,23 @@ pipeline{
                 }
             }
         }
-    
+           stage('Test'){
+            steps{
+                //checkout scm
+                sh '''
+		echo $IMAGE_NAME
+		echo $CATEGORY
+		echo $NAME
+		echo $JENKINS_GCLOUD_PROJECT_ID
+		echo $PARAMETERS
+		echo $URL
+		echo $PATH_TO_PARENT_POM
+		
+		'''
+
+
+            }
+        }
         stage('Git Checkout') { // for display purposes 
             steps{
                 cleanWs()
@@ -53,7 +60,7 @@ pipeline{
 	    }
 	}
 	    
-    
+    /*
         stage('PreBuild'){
             steps{
                 //Builds the container from Dockerfile
@@ -87,7 +94,7 @@ pipeline{
                 ''' 
             }   
         }
-     /*   
+        
     stage('Automated Code Review'){
             steps {
                 step([$class: 'TibcoBartPipeline', 
