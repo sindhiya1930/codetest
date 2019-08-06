@@ -1,6 +1,6 @@
 def getEnvVar(String paramName){
     //get the env from properties file
-    return sh (script:"grep '${paramName}' /opt/properties/phase1b_properties/dev_properties/consumeraddress.properties|cut -d'=' -f2", returnStdout: true).trim();
+	return sh (script:"grep '${paramName}' /opt/properties/phase1b_properties/dev_properties/${GIT_TAG}.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
 pipeline{
     agent any
