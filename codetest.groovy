@@ -2,6 +2,8 @@ def getEnvVar(String paramName){
     //get the env from properties file
 	return sh (script:"grep '${paramName}' /opt/properties/phase1b_properties/dev_properties/${SERVICE_NAME}.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
+
+def App_folder
 pipeline{
     agent any
            environment {
@@ -76,11 +78,11 @@ pipeline{
         
     stage('Automated Code Review'){
             steps {
-		    sh '''
+		    script {
 		    	cd /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICE_NAME
                 	ls | grep 'Mattel.*.application' > ms_application.txt
                 	App_folder="`head -1 ms_application.txt`"
-			'''
+		    }
 		    
                 step([$class: 'TibcoBartPipeline', 
     	              bartHome:'/opt/Bart_home',
