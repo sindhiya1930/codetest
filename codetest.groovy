@@ -6,6 +6,7 @@ pipeline{
     agent any
            environment {
                GIT_TAG = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", , returnStdout: true).trim()
+	
            }
    
 	stages {
