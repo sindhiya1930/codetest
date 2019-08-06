@@ -115,7 +115,7 @@ pipeline{
                 //build using pom.xml - specify the path of the parent pom
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'subram',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                     sh '''
-                    mvn -f ${PATH_TO_PARENT_POM}/pom.xml clean install
+                    mvn -f /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/${PATH_TO_PARENT_POM}/pom.xml clean install
 		#cd /opt/git/dev/ | mkdir -p Phase1B/cm-consumeraddress-ms
 		#cd /opt/git/dev/Phase1B/cm-consumeraddress-ms/
 		#git init
