@@ -17,10 +17,10 @@ pipeline{
                 //checkout scm
                 script{
 			env.BASE_DIR = pwd()
-                    env.IMAGE_NAME = getEnvVar('IMAGE_NAME')
-			
+                env.IMAGE_NAME = getEnvVar('IMAGE_NAME')
+		env.SERVICENAME = getEnvVar('SERVICENAME')
 		env.CATEGORY = getEnvVar('CATEGORY')
-		env.NAME = getEnvVar('NAME')
+
                     env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID')
                     env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE')
                     env.JENKINS_GCLOUD_K8S_CLUSTER_REGION = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_REGION')
