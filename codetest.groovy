@@ -68,7 +68,7 @@ pipeline{
                         module=`grep $i /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/${CATEGORY}/${SERVICE_NAME}/ReadMe.txt | wc -l`
                         if [ $module -eq 1 ]; then
                             echo "Shared module is present in the ReadMe.txt and has to be copied to the workspace"
-                            cp -r $i /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}/
+                            cp -r $i /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICE_NAME/
                             sed -i "s/Mattel.*.parent/`echo $B`/g" /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICE_NAME}/$i/pom.xml
                         else
                             echo "Shared Module not present in the ReadMe.txt"
