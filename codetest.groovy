@@ -60,7 +60,7 @@ pipeline{
 	    }
 	}
 	    
-    /*
+    
         stage('PreBuild'){
             steps{
                 //Builds the container from Dockerfile
@@ -94,7 +94,7 @@ pipeline{
                 ''' 
             }   
         }
-        
+     /*   
     stage('Automated Code Review'){
             steps {
                 step([$class: 'TibcoBartPipeline', 
