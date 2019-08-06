@@ -135,22 +135,15 @@ pipeline{
             steps{
                 //Builds the container from Dockerfile
                 sh '''
-                #This gets the Git commit id 
                 GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
                 echo $GIT_COMMIT_HASH
-                
-                #Copies the Dockerfile to the path where .ear file is created
-                cd /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application/target/
-                pwd
-                cp /var/lib/jenkins/workspace/Phase1B/cm-consumeraddress-ms/deploy_rearch/dockerfiles/${CATEGORY}/${SERVICENAME}/Dockerfile Dockerfile
-                pwd
-                #Builds the images with git commitid and latest tag
+                cd /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application/target/
+                cp /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/dockerfiles/${CATEGORY}/${SERVICENAME}/Dockerfile Dockerfile
                 docker build -t gcr.io/${JENKINS_GCLOUD_PROJECT_ID}/${IMAGE_NAME}:$GIT_COMMIT_HASH .
                 ''' 
             }   
         }
-        
-            
+          
         stage('Image Publish to GCR'){
             steps{
                 sh '''
