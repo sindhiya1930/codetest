@@ -96,7 +96,7 @@ pipeline{
                 ''' 
             }   
         }
-     /*   
+        
     stage('Automated Code Review'){
             steps {
                 step([$class: 'TibcoBartPipeline', 
@@ -109,7 +109,7 @@ pipeline{
 		   
         	}
         }
-    
+    /*
         stage('Build') {
             steps {
                 //build using pom.xml - specify the path of the parent pom
