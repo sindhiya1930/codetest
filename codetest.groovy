@@ -42,7 +42,7 @@ pipeline{
                 sh '''
 		echo $IMAGE_NAME
 		echo $CATEGORY
-		echo $NAME
+		echo $SERVICENAME
 		echo $JENKINS_GCLOUD_PROJECT_ID
 		echo $PARAMETERS
 		echo $URL
@@ -67,11 +67,11 @@ pipeline{
                 sh '''
                 #description : The script is used to fetch the dependent shared module with respect to the API.
                 #!/bin/bash
-		        mkdir /var/lib/jenkins/workspace/${JOB_NAME}/${NAME}
+		        mkdir /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}
                 #Transfer of API and API files to the workspace
-                cp -r /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/${CATEGORY}/${NAME}/* /var/lib/jenkins/workspace/${JOB_NAME}/${NAME}/
+                cp -r /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/${CATEGORY}/${SERVICENAME}/* /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}/
                 #Get the list of shared modules currently present
-                cd /var/lib/jenkins/workspace/${JOB_NAME}/${NAME}
+                cd /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}
                 ls | grep 'Mattel.*.parent' > ms_parent.txt
                 B="`cat ms_parent.txt`"
                 cd /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/SharedModules/
@@ -80,11 +80,11 @@ pipeline{
                 shared_module="`echo $A`"
                 for i in $shared_module
                     do
-                        module=`grep $i /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/${CATEGORY}/${NAME}/ReadMe.txt | wc -l`
+                        module=`grep $i /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/${CATEGORY}/${SERVICENAME}/ReadMe.txt | wc -l`
                         if [ $module -eq 1 ]; then
                             echo "Shared module is present in the ReadMe.txt and has to be copied to the workspace"
-                            cp -r $i /var/lib/jenkins/workspace/${JOB_NAME}/${NAME}/
-                            sed -i "s/Mattel.*.parent/`echo $B`/g" /var/lib/jenkins/workspace/${JOB_NAME}/${NAME}/$i/pom.xml
+                            cp -r $i /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}/
+                            sed -i "s/Mattel.*.parent/`echo $B`/g" /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}/$i/pom.xml
                         else
                             echo "Shared Module not present in the ReadMe.txt"
                         fi
@@ -100,8 +100,8 @@ pipeline{
                 step([$class: 'TibcoBartPipeline', 
     	              bartHome:'/opt/Bart_home',
     	              bartVer:'1.0',
-    	              projectName:"Mattel.CM.${NAME}.${CATEGORY}.application",
-    	              projectWorkSpace:"/var/lib/jenkins/workspace/${JOB_NAME}/${NAME}",
+    	              projectName:"Mattel.CM.${SERVICENAME}.${CATEGORY}.application",
+    	              projectWorkSpace:"/var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}",
     	              reportDir:"${workspace}"])
 		    
 		   
@@ -118,13 +118,13 @@ pipeline{
 		cd /opt/git/dev/${JOB_NAME}/
 		git init
 		git clone -b dev --single-branch https://$USERNAME:$PASSWORD@github.com/mattel-dig/ConsumerMaster--GSL-.git
-		cp /var/lib/jenkins/workspace/${JOB_NAME}/${NAME}/Mattel.CM.${NAME}.${CATEGORY}.application/target/Mattel.CM.${NAME}.${CATEGORY}.application_1.0.0.ear /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${NAME}/Mattel.CM.${NAME}.${CATEGORY}.application_$(date +%Y%m%d_%H%M%S).ear
-		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${NAME}/
-		git add Mattel.CM.${NAME}.${CATEGORY}.application_$(date +%Y%m%d_%H)*.ear
+		cp /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application/target/Mattel.CM.${SERVICENAME}.${CATEGORY}.application_1.0.0.ear /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application_$(date +%Y%m%d_%H%M%S).ear
+		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICENAME${}/
+		git add Mattel.CM.${SERVICENAME}.${CATEGORY}.application_$(date +%Y%m%d_%H)*.ear
 		git commit -m "$(date +%Y%m%d_%H%M)"
-		cp /var/lib/jenkins/workspace/${JOB_NAME}/*.html /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${NAME}/${NAME}_report_$(date +%Y%m%d_%H%M%S).html
-		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${NAME}/
-		git add ${NAME}_report_$(date +%Y%m%d_%H%M)*.html
+		cp /var/lib/jenkins/workspace/${JOB_NAME}/*.html /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICENAME}/${SERVICENAME}_report_$(date +%Y%m%d_%H%M%S).html
+		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICENAME}/
+		git add ${SERVICENAME}_report_$(date +%Y%m%d_%H%M)*.html
 		git commit -m "$(date +%Y%m%d_%H%M)"
 		git push https://$USERNAME:$PASSWORD@github.com/mattel-dig/ConsumerMaster--GSL-/ dev
 		rm -rf /opt/git/dev/${JOB_NAME}/*
@@ -143,9 +143,9 @@ pipeline{
                 echo $GIT_COMMIT_HASH
                 
                 #Copies the Dockerfile to the path where .ear file is created
-                cd /var/lib/jenkins/workspace/${JOB_NAME}/${NAME}/Mattel.CM.${NAME}.${CATEGORY}.application/target/
+                cd /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}/Mattel.CM.${SERVICENAME}.${CATEGORY}.application/target/
                 pwd
-                cp /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/dockerfiles/${CATEGORY}/${NAME}/Dockerfile Dockerfile
+                cp /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/dockerfiles/${CATEGORY}/${SERVICENAME}/Dockerfile Dockerfile
                 pwd
                 #Builds the images with git commitid and latest tag
                 docker build -t gcr.io/${JENKINS_GCLOUD_PROJECT_ID}/${IMAGE_NAME}:$GIT_COMMIT_HASH .
