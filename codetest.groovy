@@ -69,10 +69,11 @@ pipeline{
                 #!/bin/bash
 		echo ${SERVICENAME}
 		 mkdir /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICENAME
+		 chmod -R 777 /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICENAME
                 #Transfer of API and API files to the workspace
-                cp -r /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/${CATEGORY}/${SERVICENAME}/* /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}/
+                cp -r /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/${CATEGORY}/$SERVICENAME/* /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICENAME/
                 #Get the list of shared modules currently present
-                cd /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}
+                cd /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICENAME
                 ls | grep 'Mattel.*.parent' > ms_parent.txt
                 B="`cat ms_parent.txt`"
                 cd /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/SharedModules/
