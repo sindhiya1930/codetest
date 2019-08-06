@@ -11,6 +11,16 @@ pipeline{
    
 	stages {
 		
+       stage('Test'){
+            steps{
+                //checkout scm
+                sh '''
+		echo $GIT_TAG
+		'''
+
+                }
+            }
+        }
 
        stage('Initialization'){
             steps{
@@ -18,45 +28,11 @@ pipeline{
                 script{
                     env.BASE_DIR = pwd()
                     env.IMAGE_NAME = getEnvVar('IMAGE_NAME')
-		env.CATEGORY = getEnvVar('CATEGORY')
-		env.NAME = getEnvVar('NAME')
-                    env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID')
-                    env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE')
-                    env.JENKINS_GCLOUD_K8S_CLUSTER_REGION = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_REGION')
-                    env.DEPLOY_GCLOUD_PROJECT_ID_DEV= getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_DEV')
-                    env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV')
-                    env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV')
-                    env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV')
-                    env.DEPLOYMENT_NAME = getEnvVar('DEPLOYMENT_NAME')
-		env.PARAMETERS = getEnvVar('PARAMETERS')
-		env.URL = getEnvVar('URL')
-                    env.PATH_TO_PARENT_POM = getEnvVar('PATH_TO_PARENT_POM')
+
                 }
             }
         }
-    stage('Sence'){
-			steps{
-			sh '''
-			#GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
-			#echo $GIT_COMMIT_HASH
-			#GIT_TAG=`git describe --tags $(git rev-list --tags --max-count=1)| cut -d'_' -f1`
-			echo $PARAMETERS
-		#case  $GIT_TAG  in
-                #"consumeraddress")       
- 			#TAG1=$GIT_TAG
-			#echo $TAG1
-                    #;;
-		#"consumerchild")       
- 		#TAG1=$GIT_TAG
-                   # ;;
-               #*)      
-		 #echo "no tag"
-                   # ;;
-          #esac 
-			'''
-			
-			}
-			}
+    
       /*  stage('Git Checkout') { // for display purposes 
             steps{
                 cleanWs()
