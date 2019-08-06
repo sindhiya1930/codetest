@@ -25,8 +25,22 @@ pipeline{
             steps{
                 //checkout scm
                 script{
-                    env.BASE_DIR = pwd()
+			env.BASE_DIR = pwd()
                     env.IMAGE_NAME = getEnvVar('IMAGE_NAME')
+			
+		env.CATEGORY = getEnvVar('CATEGORY')
+		env.NAME = getEnvVar('NAME')
+                    env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID')
+                    env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE')
+                    env.JENKINS_GCLOUD_K8S_CLUSTER_REGION = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_REGION')
+                    env.DEPLOY_GCLOUD_PROJECT_ID_DEV= getEnvVar('DEPLOY_GCLOUD_PROJECT_ID_DEV')
+                    env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV')
+                    env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV')
+                    env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV')
+                    env.DEPLOYMENT_NAME = getEnvVar('DEPLOYMENT_NAME')
+		env.PARAMETERS = getEnvVar('PARAMETERS')
+		env.URL = getEnvVar('URL')
+                    env.PATH_TO_PARENT_POM = getEnvVar('PATH_TO_PARENT_POM')
 
                 }
             }
