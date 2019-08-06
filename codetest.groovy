@@ -1,11 +1,11 @@
 def getEnvVar(String paramName){
     //get the env from properties file
-	return sh (script:"grep '${paramName}' /opt/properties/phase1b_properties/dev_properties/${GIT_TAG}.properties|cut -d'=' -f2", returnStdout: true).trim();
+	return sh (script:"grep '${paramName}' /opt/properties/phase1b_properties/dev_properties/${SERVICE_NAME}.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
 pipeline{
     agent any
            environment {
-               GIT_TAG = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", , returnStdout: true).trim()
+               SERVICE_NAME = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", , returnStdout: true).trim()
 	
            }
    
@@ -19,7 +19,6 @@ pipeline{
                 script{
 			env.BASE_DIR = pwd()
                 env.IMAGE_NAME = getEnvVar('IMAGE_NAME')
-		env.SERVICENAME = getEnvVar('SERVICENAME')
 		env.CATEGORY = getEnvVar('CATEGORY')
                     env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID')
                     env.JENKINS_GCLOUD_K8S_CLUSTER_ZONE = getEnvVar('JENKINS_GCLOUD_K8S_CLUSTER_ZONE')
