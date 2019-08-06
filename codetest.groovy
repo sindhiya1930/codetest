@@ -67,7 +67,8 @@ pipeline{
                 sh '''
                 #description : The script is used to fetch the dependent shared module with respect to the API.
                 #!/bin/bash
-		        mkdir /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}
+		echo ${SERVICENAME}
+		 mkdir /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICENAME
                 #Transfer of API and API files to the workspace
                 cp -r /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/${CATEGORY}/${SERVICENAME}/* /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICENAME}/
                 #Get the list of shared modules currently present
