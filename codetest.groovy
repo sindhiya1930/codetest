@@ -179,8 +179,8 @@ pipeline{
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'devApiCreds',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                     sh '''
                     sleep 140
-                    //post deployment verification and rollback
-                    //post deployment script for dev_deploymentaddress.yml file
+                    #post deployment verification and rollback
+                    #post deployment script for dev_deploymentaddress.yml file
                     curl -X GET --header 'Accept: application/json' --header '${PARAMETERS}' '${URL}' -u $USERNAME:$PASSWORD > result.txt
                     status=`grep -E "Bad Request|Server Error" result.txt| wc -l`
                     echo $status
