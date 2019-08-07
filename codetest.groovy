@@ -11,6 +11,16 @@ pipeline{
           }
    
 	stages {
+		
+				stage('Sence'){
+			steps{
+			sh '''
+
+			echo $SERVICE_NAME
+
+			
+			}
+			}
 	stage('Initialization'){
             steps{
                 //checkout scm
@@ -33,7 +43,9 @@ pipeline{
                 }
             }
         }
+		
 
+/* 
         stage('Git Checkout') { // for display purposes 
             steps{
                 cleanWs()
@@ -90,7 +102,7 @@ pipeline{
 		  }
         	}
 
-    
+   
          stage('Build') {
             steps {
                 //build using pom.xml - specify the path of the parent pom
@@ -158,7 +170,7 @@ pipeline{
             }
         }
 
-/*    stage('Deployment to DEV GKE'){
+    stage('Deployment to DEV GKE'){
             steps{
                 withCredentials([file(credentialsId: 'mattelCreds', variable: 'mattel')]) {
                     sh '''
