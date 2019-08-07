@@ -18,7 +18,7 @@ pipeline{
 
 			echo $SERVICE_NAME
 
-			
+			'''
 			}
 			}
 	stage('Initialization'){
