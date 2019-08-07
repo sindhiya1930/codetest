@@ -89,6 +89,30 @@ pipeline{
             }   
         }
  
+		 stage('Automated Code Review'){
+            steps {
+                step([$class: 'TibcoBartPipeline', 
+    	              bartHome:'/opt/Bart_home',
+    	              bartVer:'1.0',
+    	              projectName:"${B_ProjectName}",
+    	              projectWorkSpace:"/var/lib/jenkins/workspace/${JOB_NAME}/${SERVICE_NAME}",
+    	              reportDir:"${workspace}"])
+		  }
+        	}
+
+   
+         stage('Build') {
+            steps {
+                //build using pom.xml - specify the path of the parent pom
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'subram',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                sh '''
+                mvn -f ${PATH_TO_PARENT_POM}/pom.xml clean install
+		
+		
+		'''
+                }
+            }
+        }
 }
 }
 		
