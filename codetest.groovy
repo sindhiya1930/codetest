@@ -106,7 +106,7 @@ pipeline{
                 //build using pom.xml - specify the path of the parent pom
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'subram',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                 sh '''
-                mvn -f ${PATH_TO_PARENT_POM}/pom.xml clean install
+                mvn -f ${SERVICE_NAME}/${B_ProjectName}.parent/pom.xml clean install
 		
 		
 		'''
