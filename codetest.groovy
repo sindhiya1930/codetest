@@ -16,7 +16,7 @@ pipeline{
 			steps{
 			sh '''
 
-			echo $SERVICE_NAME
+			echo ${SERVICE_NAME}
 
 			'''
 			}
@@ -44,7 +44,50 @@ pipeline{
             }
         }
 		
-
+ stage('Git Checkout') { // for display purposes 
+            steps{
+                cleanWs()
+		checkout([$class: 'GitSCM', branches: [[name: '*/dev']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-service-acc', url: 'https://github.com/mattel-dig/ConsumerMaster--GSL-.git']]])
+	    }
+	}
+   
+        stage('PreBuild'){
+            steps{
+                //Builds the container from Dockerfile
+                sh '''
+                #description : The script is used to fetch the dependent shared module with respect to the API.
+                #!/bin/bash
+		echo ${SERVICE_NAME}
+		 mkdir /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICE_NAME
+		 chmod -R 777 /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICE_NAME
+                #Transfer of API and API files to the workspace
+                cp -r /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/${CATEGORY}/$SERVICE_NAME/* /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICE_NAME/
+                #Get the list of shared modules currently present
+                cd /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICE_NAME
+                ls | grep 'Mattel.*.parent' > ms_parent.txt
+                B="`cat ms_parent.txt`"
+                cd /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/SharedModules/
+                ls > SM_list.txt
+                A="`cat SM_list.txt`"
+                shared_module="`echo $A`"
+                for i in $shared_module
+                    do
+                        module=`grep $i /var/lib/jenkins/workspace/${JOB_NAME}/code_rearch/${CATEGORY}/${SERVICE_NAME}/ReadMe.txt | wc -l`
+                        if [ $module -eq 1 ]; then
+                            echo "Shared module is present in the ReadMe.txt and has to be copied to the workspace"
+                            cp -r $i /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICE_NAME/
+                            sed -i "s/Mattel.*.parent/`echo $B`/g" /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICE_NAME}/$i/pom.xml
+                        else
+                            echo "Shared Module not present in the ReadMe.txt"
+                        fi
+                    done
+                > SM_list.txt
+		cd /var/lib/jenkins/workspace/${JOB_NAME}/$SERVICE_NAME
+                	ls | grep 'Mattel.*.application' > ms_application.txt
+                	App_folder="`head -1 ms_application.txt`"
+                ''' 
+            }   
+        }
  
 }
 }
