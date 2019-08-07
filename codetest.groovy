@@ -162,12 +162,12 @@ pipeline{
                     #RESULT=$?
                     #echo $RESULT
                     #if [ $RESULT -eq 1 ]; then
-                    #echo "Deployment already exists! so updating the deployment"
-                    #kubectl apply -f /opt/deploymentfiles/phase1b_deployment/dev_deployment/${SERVICE_NAME}_dev.yml
-                    #kubectl rollout status deployment ${DEPLOYMENT_NAME}
+                    echo "Deployment already exists! so updating the deployment"
+                    kubectl apply -f /opt/deploymentfiles/phase1b_deployment/dev_deployment/${SERVICE_NAME}_dev.yml
+                    kubectl rollout status deployment ${DEPLOYMENT_NAME}
                     #else
-                    echo "Creating a new deployment"
-                    kubectl create -f /opt/deploymentfiles/phase1b_deployment/dev_deployment/${SERVICE_NAME}_dev.yml
+                    #echo "Creating a new deployment"
+                    #kubectl create -f /opt/deploymentfiles/phase1b_deployment/dev_deployment/${SERVICE_NAME}_dev.yml
                     #fi
                     ''' 
                 }
