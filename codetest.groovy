@@ -142,6 +142,37 @@ pipeline{
                 ''' 
             }
         }
+		
+    stage('Deployment to DEV GKE'){
+            steps{
+                withCredentials([file(credentialsId: 'mattelCreds', variable: 'mattel')]) {
+                    sh '''
+                    #Sets the env for gcloud
+                    gcloud auth activate-service-account --key-file=${mattel}
+                    gcloud config set compute/zone ${DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV}
+                    gcloud config set compute/region ${DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV}
+                    gcloud config set project ${DEPLOY_GCLOUD_PROJECT_ID_DEV}
+                    #Though --zone is mentioned for get-credentials ,provide the region
+                    gcloud container clusters get-credentials ${DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV} --zone ${DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV} 
+                    GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
+		    echo $GIT_COMMIT_HASH
+                    sed -i s/latest/`echo $GIT_COMMIT_HASH`/g /opt/deploymentfiles/phase1b_deployment/dev_deployment/${SERVICE_NAME}_dev.yml
+                    #Checks for any deployment
+                    #kubectl get deployments ${DEPLOYMENT_NAME}
+                    #RESULT=$?
+                    #echo $RESULT
+                    #if [ $RESULT -eq 1 ]; then
+                    echo "Deployment already exists! so updating the deployment"
+                    kubectl apply -f /opt/deploymentfiles/phase1b_deployment/dev_deployment/${SERVICE_NAME}_dev.yml
+                    kubectl rollout status deployment ${DEPLOYMENT_NAME}
+                    #else
+                    #echo "Creating a new deployment"
+                    #kubectl create -f /opt/deploymentfiles/phase1b_deployment/dev_deployment/${SERVICE_NAME}_dev.yml
+                    #fi
+                    ''' 
+                }
+            }
+        } 
 }
 }
 		
