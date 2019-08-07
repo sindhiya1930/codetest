@@ -173,6 +173,34 @@ pipeline{
                 }
             }
         } 
+		
+        stage('DEV-SanityTesting&checkforRollback'){
+            steps{
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'devApiCreds',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                    sh '''
+                    sleep 140
+                    //post deployment verification and rollback
+                    //post deployment script for dev_deploymentaddress.yml file
+                    curl -X GET --header 'Accept: application/json' --header '${PARAMETERS}' '${URL}' -u $USERNAME:$PASSWORD > result.txt
+                    status=`grep -E "Bad Request|Server Error" result.txt| wc -l`
+                    echo $status
+                    if [ $status -eq 0 ]; then
+                        echo "Deployment has been rolled out successfully"
+                        GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
+                        echo $GIT_COMMIT_HASH
+                        echo $GIT_COMMIT_HASH >> /opt/docker_tag/phase1b_tag/dev_docker_tag/${CATEGORY}/${SERVICE_NAME}_tag.txt
+                    else
+                        echo "Deployment wasn't successfull, rolling back the deploy to the previous successfull image"
+                        image=`tail -n 1 /opt/docker_tag/phase1b_tag/dev_docker_tag/${CATEGORY}/${SERVICE_NAME}_tag.txt`
+                        echo "Last successfull $image image is going to be deployed"
+                        kubectl apply -f /opt/deploymentfiles/phase1b_deployment/dev_deployment/${SERVICE_NAME}_dev.yml
+                        kubectl rollout status deployment ${DEPLOYMENT_NAME}
+                    fi
+                    rm -rf result.txt
+                    ''' 
+                }
+            }
+        }
 }
 }
 		
