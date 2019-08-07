@@ -113,6 +113,35 @@ pipeline{
                 }
             }
         }
+		
+		stage('Docker Containerisation'){
+            steps{
+                //Builds the container from Dockerfile
+                sh '''
+                GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
+                echo $GIT_COMMIT_HASH
+                cd /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICE_NAME}/${B_ProjectName}/target/
+                cp /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/dockerfiles/${CATEGORY}/${SERVICE_NAME}/Dockerfile Dockerfile
+                docker build -t gcr.io/${JENKINS_GCLOUD_PROJECT_ID}/${IMAGE_NAME}:$GIT_COMMIT_HASH .
+                ''' 
+            }   
+        }
+          
+        stage('Image Publish to GCR'){
+            steps{
+                sh '''
+                #This gets the Git commit id 
+                GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
+                echo $GIT_COMMIT_HASH
+                gcloud config set compute/zone ${JENKINS_GCLOUD_K8S_CLUSTER_ZONE}       
+                gcloud config set compute/region ${JENKINS_GCLOUD_K8S_CLUSTER_REGION}
+                gcloud config set project ${JENKINS_GCLOUD_PROJECT_ID}
+                gcloud auth configure-docker
+                #Pushes Docker images into GCR
+                docker push gcr.io/${JENKINS_GCLOUD_PROJECT_ID}/${IMAGE_NAME}:$GIT_COMMIT_HASH
+                ''' 
+            }
+        }
 }
 }
 		
