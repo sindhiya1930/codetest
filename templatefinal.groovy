@@ -34,7 +34,7 @@ pipeline{
  stage('Git Checkout') { // for display purposes 
             steps{
                 cleanWs()
-		checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/**']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-service-acc', refspec: '+refs/tags/*:refs/remotes/origin/tags/*', url: 'https://github.com/mattel-dig/ConsumerMaster--GSL-.git']]])
+		checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/*_dev_*']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-service-acc', refspec: '+refs/tags/*:refs/remotes/origin/tags/*', url: 'https://github.com/mattel-dig/ConsumerMaster--GSL-.git']]])
 	    }
 	}
    
@@ -94,7 +94,32 @@ pipeline{
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'subram',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                 sh '''
                 mvn -f ${SERVICE_NAME}/${PROJECT_NAME}.parent/pom.xml clean install
-		
+		cd /opt/git/dev/ 
+		if [ ! -d "${JOB_NAME}" ]; then
+		mkdir -p ${JOB_NAME}
+		fi
+		cd /opt/git/dev/${JOB_NAME}/
+		rm -rf ConsumerMaster--GSL-
+		git init
+		git clone -b dev --single-branch https://$USERNAME:$PASSWORD@github.com/mattel-dig/ConsumerMaster--GSL-.git
+		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/
+		if [ ! -d "${SERVICE_NAME}" ]; then
+		mkdir -p ${SERVICE_NAME}
+		fi
+		cp /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICE_NAME}/${PROJECT_NAME}/target/${PROJECT_NAME}_1.0.0.ear /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICE_NAME}/${PROJECT_NAME}_$(date +%Y%m%d_%H%M%S).ear
+		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Earfiles/${CATEGORY}/${SERVICE_NAME}/
+		git add ${PROJECT_NAME}_$(date +%Y%m%d_%H)*.ear
+		git commit -m "$(date +%Y%m%d_%H%M)"
+		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}
+		if [ ! -d "${SERVICE_NAME}" ]; then
+		mkdir -p ${SERVICE_NAME}
+		fi
+		cp /var/lib/jenkins/workspace/${JOB_NAME}/*.html /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICE_NAME}/${SERVICE_NAME}_report_$(date +%Y%m%d_%H%M%S).html
+		cd /opt/git/dev/${JOB_NAME}/ConsumerMaster--GSL-/deploy_rearch/Bart_report/${CATEGORY}/${SERVICE_NAME}/
+		git add ${SERVICE_NAME}_report_$(date +%Y%m%d_%H%M)*.html
+		git commit -m "$(date +%Y%m%d_%H%M)"
+		git push https://$USERNAME:$PASSWORD@github.com/mattel-dig/ConsumerMaster--GSL-/ dev
+		rm -rf /opt/git/dev/${JOB_NAME}/*
 		
 		'''
                 }
@@ -137,18 +162,18 @@ pipeline{
                     gcloud config set project ${DEPLOY_GCLOUD_PROJECT_ID_DEV}
                     #Though --zone is mentioned for get-credentials ,provide the region
                     gcloud container clusters get-credentials ${DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV} --zone ${DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV} 
-                    sed -i s/latest/`echo $GIT_COMMIT`/g /opt/deploymentfiles/phase1b_deployment/dev_deployment/${SERVICE_NAME}_dev.yml
+                    sed -i s/latest/`echo $GIT_COMMIT`/g /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/manifest.yml/DEV/${SERVICE_NAME}_dev.yml
                     #Checks for any deployment
                     #kubectl get deployments cm-${SERVICE_NAME}-devops
                     #RESULT=$?
                     #echo $RESULT
                     #if [ $RESULT -eq 1 ]; then
                     echo "Deployment already exists! so updating the deployment"
-                    kubectl apply -f /opt/deploymentfiles/phase1b_deployment/dev_deployment/${SERVICE_NAME}_dev.yml
+                    kubectl apply -f /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/manifest.yml/DEV/${SERVICE_NAME}_dev.yml
                     kubectl rollout status deployment cm-${SERVICE_NAME}-devops
                     #else
                     #echo "Creating a new deployment"
-                    #kubectl create -f /opt/deploymentfiles/phase1b_deployment/dev_deployment/${SERVICE_NAME}_dev.yml
+                    #kubectl create -f /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/manifest.yml/DEV/${SERVICE_NAME}_dev.yml
                     #fi
                     ''' 
                 }
@@ -173,7 +198,7 @@ pipeline{
                         echo "Deployment wasn't successfull, rolling back the deploy to the previous successfull image"
                         image=`tail -n 1 /opt/docker_tag/phase1b_tag/dev_docker_tag/${CATEGORY}/${SERVICE_NAME}_tag.txt`
                         echo "Last successfull $image image is going to be deployed"
-                        kubectl apply -f /opt/deploymentfiles/phase1b_deployment/dev_deployment/${SERVICE_NAME}_dev.yml
+                        kubectl apply -f /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/manifest.yml/DEV/${SERVICE_NAME}_dev.yml
                         kubectl rollout status deployment cm-${SERVICE_NAME}-devops
                     fi
                     rm -rf result.txt
