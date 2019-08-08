@@ -105,8 +105,6 @@ pipeline{
             steps{
                 //Builds the container from Dockerfile
                 sh '''
-                GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
-                echo $GIT_COMMIT_HASH
                 cd /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICE_NAME}/${PROJECT_NAME}/target/
                 cp /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/dockerfiles/${CATEGORY}/${SERVICE_NAME}/Dockerfile Dockerfile
                 docker build -t gcr.io/${JENKINS_GCLOUD_PROJECT_ID}/cm-${SERVICE_NAME}-devops:$GIT_COMMIT .
@@ -118,14 +116,12 @@ pipeline{
             steps{
                 sh '''
                 #This gets the Git commit id 
-                GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
-                echo $GIT_COMMIT_HASH
                 gcloud config set compute/zone ${JENKINS_GCLOUD_K8S_CLUSTER_ZONE}       
                 gcloud config set compute/region ${JENKINS_GCLOUD_K8S_CLUSTER_REGION}
                 gcloud config set project ${JENKINS_GCLOUD_PROJECT_ID}
                 gcloud auth configure-docker
                 #Pushes Docker images into GCR
-                docker push gcr.io/${JENKINS_GCLOUD_PROJECT_ID}/cm-${SERVICE_NAME}-devops:$GIT_COMMIT_HASH
+                docker push gcr.io/${JENKINS_GCLOUD_PROJECT_ID}/cm-${SERVICE_NAME}-devops:$GIT_COMMIT
                 ''' 
             }
         }
@@ -141,9 +137,7 @@ pipeline{
                     gcloud config set project ${DEPLOY_GCLOUD_PROJECT_ID_DEV}
                     #Though --zone is mentioned for get-credentials ,provide the region
                     gcloud container clusters get-credentials ${DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV} --zone ${DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV} 
-                    GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
-		    echo $GIT_COMMIT_HASH
-                    sed -i s/latest/`echo $GIT_COMMIT_HASH`/g /opt/deploymentfiles/phase1b_deployment/dev_deployment/${SERVICE_NAME}_dev.yml
+                    sed -i s/latest/`echo $GIT_COMMIT`/g /opt/deploymentfiles/phase1b_deployment/dev_deployment/${SERVICE_NAME}_dev.yml
                     #Checks for any deployment
                     #kubectl get deployments cm-${SERVICE_NAME}-devops
                     #RESULT=$?
@@ -173,9 +167,8 @@ pipeline{
                     echo $status
                     if [ $status -eq 0 ]; then
                         echo "Deployment has been rolled out successfully"
-                        GIT_COMMIT_HASH=`git log -n 1 --pretty=format:%H`
-                        echo $GIT_COMMIT_HASH
-                        echo $GIT_COMMIT_HASH >> /opt/docker_tag/phase1b_tag/dev_docker_tag/${CATEGORY}/${SERVICE_NAME}_tag.txt
+                        echo $GIT_COMMIT
+                        echo $GIT_COMMIT >> /opt/docker_tag/phase1b_tag/dev_docker_tag/${CATEGORY}/${SERVICE_NAME}_tag.txt
                     else
                         echo "Deployment wasn't successfull, rolling back the deploy to the previous successfull image"
                         image=`tail -n 1 /opt/docker_tag/phase1b_tag/dev_docker_tag/${CATEGORY}/${SERVICE_NAME}_tag.txt`
