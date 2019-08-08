@@ -169,7 +169,7 @@ pipeline{
                 }
             }
         } 
-	/*	
+		
         stage('DEV-SanityTesting&checkforRollback'){
             steps{
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'devApiCreds',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
@@ -196,7 +196,7 @@ pipeline{
                     ''' 
                 }
             }
-        } */
+        } 
 }
 }
 		
