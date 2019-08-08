@@ -12,15 +12,6 @@ pipeline{
    
 	stages {
 		
-				stage('Sence'){
-			steps{
-			sh '''
-
-			echo ${SERVICE_NAME}
-
-			'''
-			}
-			}
 	stage('Initialization'){
             steps{
                 //checkout scm
@@ -118,7 +109,7 @@ pipeline{
                 echo $GIT_COMMIT_HASH
                 cd /var/lib/jenkins/workspace/${JOB_NAME}/${SERVICE_NAME}/${PROJECT_NAME}/target/
                 cp /var/lib/jenkins/workspace/${JOB_NAME}/deploy_rearch/dockerfiles/${CATEGORY}/${SERVICE_NAME}/Dockerfile Dockerfile
-                docker build -t gcr.io/${JENKINS_GCLOUD_PROJECT_ID}/cm-${SERVICE_NAME}-devops:$GIT_COMMIT_HASH .
+                docker build -t gcr.io/${JENKINS_GCLOUD_PROJECT_ID}/cm-${SERVICE_NAME}-devops:$GIT_COMMIT .
                 ''' 
             }   
         }
