@@ -37,6 +37,8 @@ pipeline{
 
 		sh '''
 		echo $SERVICE_NAME
+		sam=`git describe --tags $(git rev-list --tags --max-count=1)`
+		echo $sam
 		'''
             }
         }
