@@ -43,7 +43,7 @@ pipeline{
  stage('Git Checkout') { // for display purposes 
             steps{
                 cleanWs()
-		checkout([$class: 'GitSCM', branches: [[name: '*/dev']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-service-acc', url: 'https://github.com/mattel-dig/ConsumerMaster--GSL-.git']]])
+		checkout([$class: 'GitSCM', branches: [[name: 'refs/tags/**']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-service-acc', refspec: '+refs/tags/*:refs/remotes/origin/tags/*', url: 'https://github.com/mattel-dig/ConsumerMaster--GSL-.git']]])
 	    }
 	}
    
