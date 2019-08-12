@@ -2,7 +2,6 @@ def getEnvVar(String paramName){
     //get the env from properties file
 	return sh (script:"grep '${paramName}' /var/lib/jenkins/workspace/${JOB_NAME}/properties/${SERVICE_NAME}.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
-
 pipeline{
     agent any
            environment {
@@ -26,15 +25,16 @@ pipeline{
 		 
 
                 script{
-			
-			def CAT= sh(script: "echo $SERVICE_NAME|cut -d'-' -f2", ,returnStdout: true).trim()
-			if (CAT=='ms') {
-                          env.CATEGORY= sh(script: "echo 'Microservice'", ,returnStdout: true).trim()
-                        }
-			else {
-				env.CATEGORY= sh(script: "echo 'API'", ,returnStdout: true).trim()
-			}
-		//env.CATEGORY = getEnvVar('CATEGORY')	
+		def SERVICE_CHECK=sh(script: "echo $SERVICE_NAME", ,returnStdout: true).trim()	
+		def CATEGORY_CHECK= sh(script: "echo $SERVICE_NAME|cut -d'-' -f2", ,returnStdout: true).trim()
+		if (CATEGORY_CHECK=='ms') {
+                env.CATEGORY= sh(script: "echo 'Microservice'", ,returnStdout: true).trim()
+		env.CATEGORY_CAMEL_CASE= sh(script: "echo 'MicroService'", ,returnStdout: true).trim()
+                }
+		else {
+		env.CATEGORY= sh(script: "echo 'API'", ,returnStdout: true).trim()
+		env.CATEGORY_CAMEL_CASE= sh(script: "echo 'API'", ,returnStdout: true).trim()
+		}
 		env.CODE_FOLDER_NAME = getEnvVar('CODE_FOLDER_NAME')
 		env.DEPLOY_FOLDER_NAME = getEnvVar('DEPLOY_FOLDER_NAME')
                 env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID')
@@ -44,7 +44,8 @@ pipeline{
                 env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV')
                 env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV')
                 env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV')
-		env.PROJECT_NAME = getEnvVar('PROJECT_NAME')	
+		env.PROJECT_NAME = getEnvVar(SERVICE_CHECK)
+		
                 }
             }
         }
