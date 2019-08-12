@@ -8,6 +8,7 @@ pipeline{
     agent any
            environment {
                SERVICE_NAME = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", , returnStdout: true).trim()
+		CAT = ""
           }
 	
 	
@@ -27,6 +28,7 @@ pipeline{
 		 
 
                 script{
+			env.CAT="sample"
 		env.CATEGORY = getEnvVar('CATEGORY')	
 		env.CODE_FOLDER_NAME = getEnvVar('CODE_FOLDER_NAME')
 		env.DEPLOY_FOLDER_NAME = getEnvVar('DEPLOY_FOLDER_NAME')
@@ -43,6 +45,15 @@ pipeline{
         }
 
 
+stage('Initialization1'){
+            steps{
+                //checkout scm
+		 
+                sh '''
+		eco $CAT
+		'''
+            }
+        }
 
    
 
