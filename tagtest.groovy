@@ -19,6 +19,7 @@ pipeline{
 			}
 		}
 
+		
 		stage('Initialization'){
             steps{
                 //checkout scm
