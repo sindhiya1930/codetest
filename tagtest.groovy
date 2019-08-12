@@ -3,12 +3,11 @@ def getEnvVar(String paramName){
 	return sh (script:"grep '${paramName}' /var/lib/jenkins/workspace/${JOB_NAME}/properties/${SERVICE_NAME}.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
 
-def CAT
 pipeline{
     agent any
            environment {
                SERVICE_NAME = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", ,returnStdout: true).trim()
-		   CAT=sh(script: "echo 'Microservice', ,returnStdout: true).trim()
+		CAT = sh(script: "echo 'Microservice'", ,returnStdout: true).trim()
           }
 	
 	
