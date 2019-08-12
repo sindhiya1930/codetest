@@ -26,10 +26,10 @@ pipeline{
 		
                 script{	
 		def CATEGORY_CHECK= sh(script: "echo $SERVICE_NAME|cut -d'-' -f2", ,returnStdout: true).trim()
-		//def SERVICE_CHECK=sh(script: "echo $SERVICE_NAME", ,returnStdout: true).trim()
+		def SERVICE_CHECK=sh(script: "echo $SERVICE_NAME", ,returnStdout: true).trim()
 		if (CATEGORY_CHECK=='ms') {
                 env.CATEGORY= sh(script: "echo 'Microservice'", ,returnStdout: true).trim()
-		env.SERVICE_CHECK=sh(script: "echo $SERVICE_NAME", ,returnStdout: true).trim()
+		env.SERVICE_CHECK=SERVICE_CHECK+'api'
                 }
 		else {
 		env.CATEGORY= sh(script: "echo 'API'", ,returnStdout: true).trim()
