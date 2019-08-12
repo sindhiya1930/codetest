@@ -29,11 +29,9 @@ pipeline{
 		def CATEGORY_CHECK= sh(script: "echo $SERVICE_NAME|cut -d'-' -f2", ,returnStdout: true).trim()
 		if (CATEGORY_CHECK=='ms') {
                 env.CATEGORY= sh(script: "echo 'Microservice'", ,returnStdout: true).trim()
-		env.CATEGORY_CAMEL_CASE= sh(script: "echo 'MicroService'", ,returnStdout: true).trim()
                 }
 		else {
 		env.CATEGORY= sh(script: "echo 'API'", ,returnStdout: true).trim()
-		env.CATEGORY_CAMEL_CASE= sh(script: "echo 'API'", ,returnStdout: true).trim()
 		}
 		env.CODE_FOLDER_NAME = getEnvVar('CODE_FOLDER_NAME')
 		env.DEPLOY_FOLDER_NAME = getEnvVar('DEPLOY_FOLDER_NAME')
@@ -55,8 +53,9 @@ pipeline{
             steps{
                 //checkout scm
                 sh """
-		
+		echo $SERVICE_NAME
 		echo $PROJECT_NAME
+		echo $CATEGORY
 		"""
             }
         }
