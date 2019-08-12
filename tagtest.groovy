@@ -53,6 +53,7 @@ pipeline{
             steps{
                 //checkout scm
                 sh """
+		echo $SERVICE_CHECK
 		echo $SERVICE_NAME
 		echo $PROJECT_NAME
 		"""
