@@ -56,7 +56,7 @@ pipeline{
                 //checkout scm
                 sh """
 		
-		echo $CATEGORY
+		echo $PROJECT_NAME
 		"""
             }
         }
