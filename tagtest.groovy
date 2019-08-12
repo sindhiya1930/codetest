@@ -2,7 +2,7 @@ def getEnvVar(String paramName){
     //get the env from properties file
 	return sh (script:"grep '${paramName}' /var/lib/jenkins/workspace/${JOB_NAME}/properties/${SERVICE_NAME}.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
-
+def SAMPLE
 pipeline{
     agent any
            environment {
@@ -23,9 +23,10 @@ pipeline{
 stage('Initialization1'){
             steps{
                 //checkout scm
-		 
+		 SAMPLE="red"
                 sh """
 		
+		echo /$SAMPLE
 		echo $CAT
 		"""
             }
