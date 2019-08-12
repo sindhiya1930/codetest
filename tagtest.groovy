@@ -27,11 +27,11 @@ pipeline{
 		 
 
                 script{
-			if (true) {
+			if (0) {
                           env.CATEGORY= sh(script: "echo 'Microservice'", ,returnStdout: true).trim()
                         }
 			else {
-				env.CATEGORY= sh(script: "echo 'Microservice'", ,returnStdout: true).trim()
+				env.CATEGORY= sh(script: "echo 'API'", ,returnStdout: true).trim()
 			}
 		//env.CATEGORY = getEnvVar('CATEGORY')	
 		env.CODE_FOLDER_NAME = getEnvVar('CODE_FOLDER_NAME')
