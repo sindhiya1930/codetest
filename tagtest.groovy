@@ -26,7 +26,7 @@ pipeline{
 		 
 
                 script{
-			if (${SERVICE_NAME}== *-ms) {
+			if (${SERVICE_NAME}) {
                           env.CATEGORY= sh(script: "echo 'Microservice'", ,returnStdout: true).trim()
                         }
 			else {
