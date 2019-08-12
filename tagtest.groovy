@@ -22,8 +22,7 @@ pipeline{
 		stage('Initialization'){
             steps{
                 //checkout scm
-		 
-
+		
                 script{
 		def SERVICE_CHECK=sh(script: "echo $SERVICE_NAME", ,returnStdout: true).trim()	
 		def CATEGORY_CHECK= sh(script: "echo $SERVICE_NAME|cut -d'-' -f2", ,returnStdout: true).trim()
