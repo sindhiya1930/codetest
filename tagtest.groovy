@@ -50,7 +50,7 @@ stage('Initialization1'){
                 //checkout scm
 		 
                 sh '''
-		eco $CAT
+		echo $CAT
 		'''
             }
         }
