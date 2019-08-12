@@ -37,7 +37,6 @@ stage('Initialization1'){
 		 
 
                 script{
-			env.CAT="sample"
 		env.CATEGORY = getEnvVar('CATEGORY')	
 		env.CODE_FOLDER_NAME = getEnvVar('CODE_FOLDER_NAME')
 		env.DEPLOY_FOLDER_NAME = getEnvVar('DEPLOY_FOLDER_NAME')
