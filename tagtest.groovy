@@ -55,7 +55,6 @@ pipeline{
                 sh """
 		echo $SERVICE_NAME
 		echo $PROJECT_NAME
-		echo $CATEGORY
 		"""
             }
         }
