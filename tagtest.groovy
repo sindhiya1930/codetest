@@ -44,7 +44,7 @@ pipeline{
                 env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV')
                 env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV')
                 env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV')
-		env.PROJECT_NAME = getEnvVar(SERVICE_CHECK)
+		env.PROJECT_NAME = getEnvVar(env.SERVICE_CHECK)
 		
                 }
             }
