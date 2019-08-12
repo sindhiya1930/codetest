@@ -1,6 +1,6 @@
 def getEnvVar(String paramName){
     //get the env from properties file
-	return sh (script:"grep '${paramName}' /opt/properties/phase1b_properties/dev_properties/${SERVICE_NAME}.properties|cut -d'=' -f2", returnStdout: true).trim();
+	return sh (script:"grep '${paramName}' /var/lib/jenkins/workspace/${JOB_NAME}/properties/${SERVICE_NAME}.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
 
 
@@ -9,6 +9,9 @@ pipeline{
            environment {
                SERVICE_NAME = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", , returnStdout: true).trim()
           }
+	
+	
+	stages {
    		stage('Git Checkout') { // for display purposes 
             steps{
                 cleanWs()
@@ -17,7 +20,7 @@ pipeline{
 		    //checkout poll: false, scm: [$class: 'GitSCM', branches: [[name: 'refs/tags/*']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '4f18f877-3658-4932-98f0-eb4d12fe1d82', refspec: '+refs/tags/*:refs/remotes/origin/tags/*', url: 'https://github.com/sindhiya1930/codetest.git']]]
 			}
 		}
-	stages {
+
 		stage('Initialization'){
             steps{
                 //checkout scm
