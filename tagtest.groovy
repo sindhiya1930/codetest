@@ -8,6 +8,7 @@ pipeline{
     agent any
            environment {
                SERVICE_NAME = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", , returnStdout: true).trim()
+		   CAT="Microsevice"
           }
 	
 	
@@ -25,7 +26,7 @@ stage('Initialization1'){
                 //checkout scm
 		 
                 sh """
-		CAT="Microsevice"
+		
 		echo $CAT
 		"""
             }
