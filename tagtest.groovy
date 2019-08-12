@@ -7,7 +7,6 @@ pipeline{
     agent any
            environment {
                SERVICE_NAME = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", ,returnStdout: true).trim()
-		CAT = sh(script: "echo 'Microservice'", ,returnStdout: true).trim()
           }
 	
 	
@@ -27,7 +26,7 @@ pipeline{
 		 
 
                 script{
-			if (0) {
+			if (${SERVICE_NAME}== *-ms) {
                           env.CATEGORY= sh(script: "echo 'Microservice'", ,returnStdout: true).trim()
                         }
 			else {
