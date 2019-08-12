@@ -26,7 +26,9 @@ pipeline{
 		 
 
                 script{
-			if (\${SERVICE_NAME}) {
+			
+			def CAT= sh(script: "echo $SERVICE_NAME|cut -d'-' -f2", ,returnStdout: true).trim()
+			if (CAT=='ms') {
                           env.CATEGORY= sh(script: "echo 'Microservice'", ,returnStdout: true).trim()
                         }
 			else {
