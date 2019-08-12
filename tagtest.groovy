@@ -24,14 +24,15 @@ pipeline{
             steps{
                 //checkout scm
 		
-                script{
-		def SERVICE_CHECK=sh(script: "echo $SERVICE_NAME", ,returnStdout: true).trim()	
+                script{	
 		def CATEGORY_CHECK= sh(script: "echo $SERVICE_NAME|cut -d'-' -f2", ,returnStdout: true).trim()
 		if (CATEGORY_CHECK=='ms') {
                 env.CATEGORY= sh(script: "echo 'Microservice'", ,returnStdout: true).trim()
+		def SERVICE_CHECK=sh(script: "echo $SERVICE_NAME", ,returnStdout: true).trim()
                 }
 		else {
 		env.CATEGORY= sh(script: "echo 'API'", ,returnStdout: true).trim()
+		def SERVICE_CHECK=sh(script: "echo $SERVICE_NAME-api", ,returnStdout: true).trim()
 		}
 		env.CODE_FOLDER_NAME = getEnvVar('CODE_FOLDER_NAME')
 		env.DEPLOY_FOLDER_NAME = getEnvVar('DEPLOY_FOLDER_NAME')
