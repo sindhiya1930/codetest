@@ -25,8 +25,9 @@ pipeline{
                 //checkout scm
 		
                 script{	
+		env.SERVICE_NAME = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", ,returnStdout: true).trim()
 		def CATEGORY_CHECK= sh(script: "echo $SERVICE_NAME|cut -d'-' -f2", ,returnStdout: true).trim()
-		env.SERVICE_CHECK=sh(script: "echo $SERVICE_NAME", ,returnStdout: true).trim()
+		//env.SERVICE_CHECK=sh(script: "echo $SERVICE_NAME", ,returnStdout: true).trim()
 		if (CATEGORY_CHECK=='ms') {
                 env.CATEGORY= sh(script: "echo 'Microservice'", ,returnStdout: true).trim()
 		
@@ -44,7 +45,7 @@ pipeline{
                 env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV')
                 env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV')
                 env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV')
-		env.NAME = getEnvVar(env.SERVICE_CHECK)
+		env.NAME = getEnvVar(env.SERVICE_NAME)
 		env.PROJECT_NAME=sh(script: "echo $NAME|cut -d' ' -f1", ,returnStdout: true).trim()
 		
                 }
