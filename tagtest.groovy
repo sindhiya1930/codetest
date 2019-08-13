@@ -82,6 +82,7 @@ pipeline{
 		   else
 		   echo "Creating a new deployment"
 		   fi
+		  '''
 		  }
 		  }
 		}
