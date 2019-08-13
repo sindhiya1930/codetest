@@ -50,7 +50,7 @@ pipeline{
             }
         }
 
-   stage('Initialization1'){
+   	stage('Initialization1'){
             steps{
                 //checkout scm
                 sh '''
@@ -62,6 +62,28 @@ pipeline{
             }
         }
 		
-
+	stage('Deployment to DEV GKE'){
+            steps{
+                withCredentials([file(credentialsId: 'mattelCreds', variable: 'mattel')]) {
+                    sh '''
+                    #Sets the env for gcloud
+                    gcloud auth activate-service-account --key-file=${mattel}
+                    gcloud config set compute/zone ${DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV}
+                    gcloud config set compute/region ${DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV}
+                    gcloud config set project ${DEPLOY_GCLOUD_PROJECT_ID_DEV}
+                    #Though --zone is mentioned for get-credentials ,provide the region
+                    gcloud container clusters get-credentials ${DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV} --zone ${DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV} 
+	       #Checks for any deployment
+               #kubectl get deployments cm-${SERVICE_NAME}
+	       
+	       DeployState=`kubectl get deployments|grep "cm-${SERVICE_NAME} " | wc -l`
+	       if [ $DeployState -eq 1 ]; then
+                    echo "Deployment already exists! so updating the deployment"
+		   else
+		   echo "Creating a new deployment"
+		   fi
+		  }
+		  }
+		}
 	}
 }
