@@ -21,17 +21,17 @@ pipeline{
                 //checkout scm
 		
                 script{	
-		env.SERVICE_NAME = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", ,returnStdout: true).trim()
 		def CATEGORY_CHECK= sh(script: "echo $SERVICE_NAME|cut -d'-' -f2", ,returnStdout: true).trim()
-		//env.SERVICE_CHECK=sh(script: "echo $SERVICE_NAME", ,returnStdout: true).trim()
+
 		if (CATEGORY_CHECK=='ms') {
                 env.CATEGORY= sh(script: "echo 'Microservice'", ,returnStdout: true).trim()
-		
+
                 }
 		else {
 		env.CATEGORY= sh(script: "echo 'API'", ,returnStdout: true).trim()
-		
+
 		}
+		
 		env.CODE_FOLDER_NAME = getEnvVar('CODE_FOLDER_NAME')
 		env.DEPLOY_FOLDER_NAME = getEnvVar('DEPLOY_FOLDER_NAME')
                 env.JENKINS_GCLOUD_PROJECT_ID = getEnvVar('JENKINS_GCLOUD_PROJECT_ID')
@@ -47,7 +47,6 @@ pipeline{
                 }
             }
         }
-
 
    stage('Initialization1'){
             steps{
