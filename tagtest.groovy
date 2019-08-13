@@ -1,6 +1,6 @@
 def getEnvVar(String paramName){
     //get the env from properties file
-	return sh (script:"grep '${paramName}' /var/lib/jenkins/workspace/${JOB_NAME}/properties/dev.properties|cut -d'=' -f2", returnStdout: true).trim();
+	return sh (script:"grep '${paramName} ' /var/lib/jenkins/workspace/${JOB_NAME}/properties/dev.properties|cut -d'=' -f2", returnStdout: true).trim();
 }
 pipeline{
     agent any
