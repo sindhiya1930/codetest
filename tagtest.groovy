@@ -25,7 +25,7 @@ pipeline{
                 //checkout scm
 		
                 script{	
-		def SERVICE_NAME = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", ,returnStdout: true).trim()
+		env.SERVICE_NAME = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", ,returnStdout: true).trim()
 		def CATEGORY_CHECK= sh(script: "echo $SERVICE_NAME|cut -d'-' -f2", ,returnStdout: true).trim()
 		//env.SERVICE_CHECK=sh(script: "echo $SERVICE_NAME", ,returnStdout: true).trim()
 		if (CATEGORY_CHECK=='ms') {
