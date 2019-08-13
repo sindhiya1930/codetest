@@ -56,13 +56,12 @@ pipeline{
    stage('Initialization1'){
             steps{
                 //checkout scm
-                sh """
-		#echo $SERVICE_CHECK
+                sh '''
 		echo $SERVICE_NAME
 		echo $PROJECT_NAME
 		echo $CATEGORY
 		echo $CATEGORY_CHECK
-		"""
+		'''
             }
         }
 		
