@@ -25,13 +25,14 @@ pipeline{
 		
                 script{	
 		def CATEGORY_CHECK= sh(script: "echo $SERVICE_NAME|cut -d'-' -f2", ,returnStdout: true).trim()
-
+		//def SERVICE_CHECK=sh(script: "echo $SERVICE_NAME", ,returnStdout: true).trim()
 		if (CATEGORY_CHECK=='ms') {
                 env.CATEGORY= sh(script: "echo 'Microservice'", ,returnStdout: true).trim()
-
+		env.SERVICE_CHECK=sh(script: "echo $SERVICE_NAME", ,returnStdout: true).trim()
                 }
 		else {
 		env.CATEGORY= sh(script: "echo 'API'", ,returnStdout: true).trim()
+		env.SERVICE_CHECK=sh(script: "echo $SERVICE_NAME-api", ,returnStdout: true).trim()
 		}
 		
 		env.CODE_FOLDER_NAME = getEnvVar('CODE_FOLDER_NAME')
@@ -43,7 +44,7 @@ pipeline{
                 env.DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_NAME_DEV')
                 env.DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_ZONE_DEV')
                 env.DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV = getEnvVar('DEPLOY_GCLOUD_K8S_CLUSTER_REGION_DEV')
-		env.NAME = getEnvVar(env.SERVICE_NAME)
+		env.NAME = getEnvVar(env.SERVICE_CHECK)
 		env.PROJECT_NAME=sh(script: "echo $NAME|cut -d' ' -f1", ,returnStdout: true).trim()
 		
                 }
@@ -57,7 +58,6 @@ pipeline{
 		echo $SERVICE_NAME
 		echo $PROJECT_NAME
 		echo $CATEGORY
-		echo $CATEGORY_CHECK
 		'''
             }
         }
