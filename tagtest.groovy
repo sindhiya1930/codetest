@@ -4,6 +4,9 @@ def getEnvVar(String paramName){
 }
 pipeline{
     agent any
+           environment {
+               SERVICE_NAME = sh(script: "git describe --tags \$(git rev-list --tags --max-count=1)| cut -d'_' -f1", ,returnStdout: true).trim()
+          }
 
 	stages {
    		stage('Git Checkout') { // for display purposes 
