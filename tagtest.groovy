@@ -32,7 +32,6 @@ pipeline{
                 }
 		else {
 		env.CATEGORY= sh(script: "echo 'API'", ,returnStdout: true).trim()
-
 		}
 		
 		env.CODE_FOLDER_NAME = getEnvVar('CODE_FOLDER_NAME')
